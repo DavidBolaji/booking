@@ -1,0 +1,61 @@
+extends email
+
+block content
+  tbody
+    tr
+      td
+        table.row
+          tbody
+            tr
+              // Logo
+              th.small-12.large-12.columns.first.last
+                table
+                  tr
+                    th
+                      center(data-parsed='')
+                        a.text-center(href='https://bookingreservation.herokuapp.com/assets/img/logo.png' alt='Logo')
+                    th.expander
+        table.row.masthead
+          tbody
+            tr
+              //Masthead
+              th.small-12.large-12.columns.first.last
+                table
+                  tr
+                    th
+                      h1.text-center Reservation Details
+                    th.expander
+        table.row
+          tbody
+            tr
+              // Adds the gap between the masthead and content
+              th.small-12.large-12.columns.first.last
+                table
+                  tr
+                    th
+                    th.expander
+        table.row
+          tbody
+            tr
+              th.small-12.large-12.columns.first.last
+                table
+                  tr
+                    th
+                      h5 Hi, #{firstname}
+                      p
+                        | Thank you for making your reservation with us.
+                        | Your reservation details have been received.
+                        | Our team will contact you shortly with more details
+                        br
+                        br
+                        | Regards,
+                        | The Bookings&amp;Reservation Team
+        table.row
+          tbody
+            tr
+              // This container adds whitespace gap at the bottom of the main content
+              th.small-12.large-12.columns.first.last
+                table
+                  tr
+                    th
+                    th.expander

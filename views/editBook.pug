@@ -1,0 +1,44 @@
+extends base
+
+block content
+  main
+    // Reservation Form goes here
+    form.booking-form#edit-form
+      .input-group
+        label.form__label(for='clientName')
+          input#clientNameE.form__input(type='text' name='clientName' autocomplete='given-name' placeholder="Enter the Client's name" value=`${booking.clientName}` readonly)
+        label.form__label(for='clientTel')
+          input#clientTelE.form__input(type='tel' name='clientTel' autocomplete='tel' placeholder="Enter the Client's Phone Number" value=`${booking.clientPhoneNumber}` readonly)
+      label.form__label(for='email')
+        input#emailE.form__input(type='email' name='clientEmail' autocomplete='email' placeholder="Enter the Client's email" value=`${booking.clientEmail}` readonly)
+      .input-group
+        label(for='hallname')
+          input#halnameE.form__input(type="text", name="hallname" readonly value=`${booking.hallname}`)
+        label(for='attendance')
+          input#attendanceE.form__input(type='number' name='attendance' placeholder='Enter the event Attendance' min='5' max='3000' value=`${booking.attendance}`)
+      label.form__label(for='event')
+        textarea#eventE.form__textarea(name='event' placeholder='Event Description' maxlength='500' minlength='5') #{booking.event}
+      div.calender__container_edit
+        div.calender__calender_edit
+          div.calender__month_edit
+            div.calender__left_arrow_edit
+              i(class='fas fa-angle-left')
+            div.calender__month_group_edit
+              h1  
+              p 
+            div.calender__right_arrow_edit
+              i(class='fas fa-angle-right')
+          div.calender__weekdays_edit
+            div Sun
+            div Mon
+            div Tue
+            div Wed
+            div Thur
+            div Fri
+            div Sat
+          div.calender__days_edit
+      .input-group
+        label.form__label
+          button#updateOne.form__input.bg-green UPDATE
+        label.form__label
+          button#deleteOne.form__input.bg-red DELETE

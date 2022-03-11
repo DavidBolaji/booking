@@ -1,0 +1,33 @@
+extends base
+
+block content
+  main#bookingsPage
+    div.container
+      if bookings.length < 1
+        .card
+          h3 No Bookings Available
+      else
+        .dates(style="padding-bottom: 20px")
+          button.brown.btn#goBack Go Back 
+          button.green.btn#export Export
+        each booking in bookings
+          - const id = booking._id
+          - const href = `/bookings/${id}`
+          - const dateFrom = booking.bookedFrom.toDateString()
+          - const dateTo = booking.bookedTo.toDateString()
+          .card
+            h3 #{booking.hallname}
+            .body
+              p Client Name: #{booking.clientName}
+              p Client Email: #{booking.clientEmail}
+              p Client Tel: #{booking.clientPhoneNumber}
+              p Event Attendance: #{booking.attendance}
+              p Event: #{booking.event}
+              p Booked From: #{dateFrom}
+              p Booked To: #{dateTo}
+            div(style="display: flex, justify-content: space-between, align-items: center")
+              a.link1.green(href=href) Update
+              a.link.red#toDelete(href=href) Delete
+    div.filter
+      form#filterForm(action="", method="post")
+        h2 Filter 

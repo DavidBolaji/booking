@@ -1,0 +1,32 @@
+extends base
+
+block content
+  main
+    // Reservation Form goes here
+    form.booking-form#edit-form
+      .input-group
+        label.form__label(for='clientName')
+          input#clientName.form__input(type='text' name='clientName' autocomplete='given-name' placeholder="Enter the Client's name" value=`${booking.clientName}`)
+        label.form__label(for='clientTel')
+          input#clientTel.form__input(type='tel' name='clientTel' autocomplete='tel' placeholder="Enter the Client's Phone Number" value=`${booking.clientPhoneNumber}`)
+      label.form__label(for='email')
+        input#email.form__input(type='email' name='clientEmail' autocomplete='email' placeholder="Enter the Client's email" value=`${booking.clientEmail}`)
+      .input-group
+        label(for='hallname')
+          input#halname(type="text", name="hallname" disabled value=`${booking.hallname}`)
+        label(for='attendance')
+          input#attendance.form__input(type='number' name='attenndace' placeholder='Enter the event Attendance' min='5' max='3000' value=`${booking.attendance}`)
+      label.form__label(for='event')
+        textarea#event.form__textarea(name='event' placeholder='Event Description' maxlength='500' minlength='5') #{booking.event}
+      .input-group
+        label.form__label(for='bookedFrom')
+          | Start
+          input#bookedFrom.form__input(type='date' name='bookedFrom' placeholder='Start' value=`${booking.bookedFrom}`)
+        label.form__label(for='bookedTo')
+          | End
+          input#bookedTo.form__input(type='date' name='bookedTo' placeholder='End' value=`${booking.bookedTo}`)
+      .input-group
+        label.form__label
+          button.form__input.bg-green(type='submit') SUBMIT
+        label.form__label
+          button#deleteOne.form__input.bg-red DELETE

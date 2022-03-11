@@ -1,0 +1,64 @@
+extends email
+block content
+  tbody
+    tr
+      td
+        // This container is the main email content
+        table.row
+          tbody
+            tr
+              // Logo
+              th.small-12.large-12.colums.first.last
+                table
+                  tr
+                    th
+                      center(data-parsed='')
+                        a.text-center(href='https://bookingreservation.herokuapp.com' align='center')
+                          img.swu-logo(src='https://bookingreservation.herokuapp.com/assets/img/logo.png' alt='Logo')
+                    th.expander
+        table.row.masthead
+          tbody
+            tr
+              //Masthead
+              th.small-12.large-12.columns.first.last
+                table
+                  tr
+                    th
+                      h1.text-center Welcome Email!
+                    th.expander
+        table.row
+          tbody
+            tr
+              // Adds the gap between the masthead and content
+              th.small-12.large-12.columns.first.last
+                table
+                  tr
+                    th
+                    th.expander
+        table.row
+          tbody
+            tr
+              // Main content
+              th.small-12.large-12.columns.first.last
+                table
+                  tr
+                    th
+                      b
+                        h5 
+                          | Hi #{firstname}, 
+                          | Welcome to the Bookings&amp;Reservation Team
+                      p
+                        | Your account has been created successfully. Please proceed to the website to create wonderful reservations.
+                      br
+                      .button
+                        a(href='https://bookingreservation.herokuapp.com' rel='no-rel' referrer='no-referrer' target='_blank' style='background-color:#f7931d;border:0px solid #f7931d;border-radius:3px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:16px;font-weight:bold;line-height:35px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;') Go to Page
+                      th.expander
+        table.row
+          tbody
+            tr
+              // This container adds whitespace gap at the bottom of the main content
+              th.small-12.large-12.columns.first.last
+                table
+                  tr
+                    th
+                    th.expander

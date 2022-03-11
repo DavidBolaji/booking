@@ -1,0 +1,55 @@
+extends base
+
+block content
+  .input-group(style="padding: 20px")
+    button.form__input.bg-red#goBack Go Back 
+    button.form__input.bg-green#export Export
+  .bookings-container 
+    .button-group 
+      select(class="select-book")
+        option(value="clientName") search by Client Name 
+        option(value="clientEmail") search by Client Email 
+        option(value="hallname") search by Hall Name 
+        option(value="bookedFrom") Search by Date (mm/dd/yyyy)
+ 
+ 
+      input(type="text" placeholder="Enter search Details" class="input-filter")
+      button(class="btn-submit") Submit
+      button(onclick="document.location.href='/csv' ") Download csv 
+      button(onclick="document.location.href='/bin' ") bin 
+      button(onclick="document.location.href='/calender' ") calender
+      
+    .table-form
+      table.tab
+        th Client Name
+        th Client Email
+        th Client Phone Number
+        th Hallname
+        th Attendance
+        th Event
+        th Booked From
+        th Booked To     
+        th Payment     
+        th Delete    
+        th Edit    
+        //- th Booked To     
+        //- tr
+        //-   td t
+        //-   td u
+        //-   td v
+        //-   td w
+        //-   td x
+        //-   td y
+        //-   td z
+        //-   td 1 
+        //- tr
+        //-   td t
+        //-   td u
+        //-   td v
+        //-   td w
+        //-   td x
+        //-   td y
+        //-   td z
+        //-   td 1 
+  .loader 
+    img(src="/images/spinner.gif")

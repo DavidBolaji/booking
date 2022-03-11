@@ -1,0 +1,56 @@
+extends base
+
+block content
+  main
+    .side__bar
+    .main__content
+      .card-container
+        .card
+          .card__header
+            .card__picture
+              .card__picture-overlay &nbsp;
+              img.class__picture-img(src='./images/background.jpeg' alt='Create')
+            h3.heading-tertiary
+              span Create a Booking
+          .card__details
+            h4.card__sub-heading Event &amp; Planning
+            p.card__text
+              | Choose from our choices of halls and book the perfect event for
+              | yourself
+            .card__data
+              span.card__icon
+                i.fas.fa-book
+          .card__footer
+            a.btn.btn--brown.btn--small(href='/book') Book
+        .card
+          .card__header
+            .card__picture
+              .card__picture-overlay &nbsp;
+              img.class__picture-img(src='' alt='Create')
+            h3.heading-tertiary
+              span New Staff
+          .card__details
+            h4.card__sub-heading Staff Management
+            p.card__text
+              | Signup a new staff to help manage the load
+            .card__data
+              span.card__icon
+                i.fas.fa-book
+          .card__footer
+            a.btn.btn--brown.btn--small(href='/register') Create
+        .card
+          .card__header
+            .card__picture
+              .card__picture-overlay &nbsp;
+              img.class__picture-img(src='' alt='Create')
+            h3.heading-tertiary
+              span Create a Hall
+          .card__details
+            h4.card__sub-heading Event &amp; Planning
+            p.card__text
+              | Create a new Hall to cater for our clients every needs
+            .card__data
+              span.card__icon
+                i.fas.fa-book
+          .card__footer
+            a.btn.btn--brown.btn--small(href='#') New

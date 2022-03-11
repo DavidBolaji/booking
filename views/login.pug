@@ -1,0 +1,19 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Login | Bookings &amp; Reservation
+  meta(name="description", content="Bookings&Reservation provides you with service and quality like no other. The place to get the best halls for the best prices")
+  meta(name="keywords", content="bookings&reservation, bookings and reservation, bookings, reservation, halls, events, event centres")
+  link(rel="shortcut icon", href="/images/favicon.jpg", type="image/jpg")
+  link(rel='stylesheet' href='./css/style.css')
+
+.login-container
+  form#login-form.login-form
+    label.form__label(for='email')
+      input.form__input(type='email' name='email' placeholder='Enter your Email' autocomplete="email")
+    label.form__label(for='password')
+      input#password.form__input(type='password' name='password' placeholder='Password' autocomplete="password")
+    label.form__label(for='submit')
+      button.form__input.bg-green(type='submit') SUBMIT
+script(src='./bundle.js')

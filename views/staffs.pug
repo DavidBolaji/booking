@@ -1,0 +1,18 @@
+extends base
+
+block content
+  main#fullpage
+    .container
+      if staffs.length < 1
+        .card
+          h3 No staff found!!! Try again
+      else
+        each staff in staffs
+          - const image = staff.imageUrl || ''
+          .card
+            .img-container
+              img(src=image, alt="No-pic")
+            .main
+              h3 #{staff.firstname} #{staff.lastname}
+              p #{staff._id}
+              p #{staff.email}

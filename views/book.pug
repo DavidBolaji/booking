@@ -1,0 +1,65 @@
+extends base
+
+block content
+  main
+    // Reservation Form goes here
+    form.booking-form#reservation-form
+      .input-group
+        label.form__label(for='clientName')
+          input#clientName.form__input(type='text' name='clientName' autocomplete='given-name' placeholder="Enter the Client's name")
+        label.form__label(for='clientTel')
+          input#clientTel.form__input(type='tel' name='clientTel' autocomplete='tel' placeholder="Enter the Client's Phone Number")
+      label.form__label(for='clientEmail')
+        input#email.form__input(type='email' name='clientEmail' autocomplete='email' placeholder="Enter the Client's email")
+      .input-group
+        label(for='hallname')
+          select#hallname.form__input(name='hallname')
+            option(value='' disabled='' selected='') Choose a Hall
+            option(value="Abuja Hall") Abuja Hall
+            option(value="Africa Hall") Africa Hall
+            option(value="Arcade Hall") Arcade Hall
+            option(value="Aso Hall") Aso Hall
+            option(value="Banquet Hall") Banquet Hall
+            option(value="Benue Hall") Benue Hall
+            option(value="Executive Hall") Executive Hall
+            option(value="Lake Chad") Lake Chad
+            option(value="Niger Hall") Niger Hall
+            option(value="Office Space") Office Space
+            option(value="Open Space") Open Space
+            option(value="Peace Garden") Peace Garden
+            option(value="Suleja Hall") Suleja Hall
+            option(value="Taraba Hall") Taraba Hall
+        label(for='attendance')
+          input#attendance.form__input(type='number' name='attendance' placeholder='Enter the event Attendance' min='5' max='3000')
+      label.form__label(for='event')
+        textarea#event.form__textarea(name='event' placeholder='Event Description' maxlength='500' minlength='5')
+      div.calender__container
+        div.calender__calender
+          div.calender__month
+            div.calender__left_arrow
+              i(class='fas fa-angle-left')
+            div.calender__month_group
+              h1  
+              p 
+            div.calender__right_arrow
+              i(class='fas fa-angle-right')
+          div.calender__weekdays
+            div Sun
+            div Mon
+            div Tue
+            div Wed
+            div Thur
+            div Fri
+            div Sat
+          div.calender__days
+            
+            
+      //- .input-group
+      //-   label.form__label(for='bookedFrom')
+      //-     | Start
+      //-     input#bookedFrom.form__input(type='date' name='bookedFrom' placeholder='Start')
+      //-   label.form__label(for='bookedTo')
+      //-     | End
+      //-     input#bookedTo.form__input(type='date' name='bookedTo' placeholder='End')
+      label.form__label
+        button.form__input.bg-green SUBMIT

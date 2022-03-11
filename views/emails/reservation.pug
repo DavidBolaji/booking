@@ -1,0 +1,60 @@
+extends email
+
+block content
+  tbody
+    tr
+      td
+        // Main Email Content
+        table.row
+          tr
+            // Logo
+            th.small-12.large-12.columns.first.last
+              table
+                tr
+                  th
+                    center(data-parsed='')
+                      a.text-center(href='http://bookingreservation.herokuapp.com' align='center')
+                        img.swu-logo(src='https://bookingreservation.herokuapp.com/assets/img/logo.png' alt='Logo')
+                  th.expander
+        table.row.masthead
+          tbody
+            tr
+              // Masthead
+              th.small-12.large-12.columns.first.last
+                table
+                  tr
+                    th
+                      h1.text-center Reservation Details
+        table.row
+          tbody
+            tr
+              th.small-12.large-12.columns.first.last
+                table
+                  tr
+                    th
+                      // This container adds the gap between masthead and digest content
+                    th.expander
+        table.row
+          tbody
+            tr
+              //Email Copy
+              th.small-12.large-12.columns.first.last
+                table
+                  tr
+                    th
+                      h5 Hello Team,
+                      p 
+                        | Reservation details for #{details.clientName}
+                      p  
+                        | Email: #{details.clientEmail}
+                      p
+                        | Hall Reserved: #{details.hallname}
+                      p
+                        | Event : #{details.event}
+                      p
+                        | Attendance: #{details.attendance}
+                      p
+                        | Booked From: #{details.bookedFrom}
+                      p 
+                        | Booked To: #{details.bookedTo}
+                      

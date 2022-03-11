@@ -1,0 +1,28 @@
+extends base
+
+block content
+  main#fullpage
+    .container
+      p.toRight 
+        a(href="") CREATE 
+          i.fas.fa-plus
+      if halls.length < 1
+        .card-alt
+          h3 No halls found!!!
+      else
+        each hall in halls
+          - const pict = hall.image || ''
+          - const href = `/halls/${hall._id}` || ''
+          .card-alt
+            .img-container-alt
+              img(src=pict, alt="no-pic")
+            .body
+              h1 #{hall.name}
+              ul Located At
+                li City: #{hall.location.city}
+                li State: #{hall.location.state}
+                li Country: #{hall.location.country}
+              p #{hall.ratingsAverage}/5
+            div(style="display: flex, justify-content: space-between, align-items: center")
+              a.link1.green(href=href target="_blank") Update
+              a.link.red#toDelete(href=href) Delete

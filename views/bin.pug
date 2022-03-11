@@ -1,0 +1,35 @@
+extends base
+
+block content
+  .input-group(style="padding: 20px")
+    button.form__input.bg-red#goBack Go Back 
+    button.form__input.bg-green#export Export
+  .bookings-container 
+    .button-group 
+      select(class="select-bookB")
+        option(value="clientName") search by Client Name 
+        option(value="clientEmail") search by Client Email 
+        option(value="hallname") search by Hall Name 
+        option(value="bookedFrom") Search by Date (mm/dd/yyyy)
+ 
+ 
+      input(type="text" placeholder="Enter search Details" class="input-filterB")
+      button(class="btn-submitB") Submit
+      button(onclick="document.location.href='/calender' ") calender
+      
+    .table-form
+      table.bin
+        th Client Name
+        th Client Email
+        th Client Phone Number
+        th Hallname
+        th Attendance
+        th Event
+        th Booked From
+        th Booked To     
+        th Payment     
+        th Delete permanently   
+        th Restore   
+        
+  .loader 
+    img(src="/images/spinner.gif")

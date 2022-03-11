@@ -1,0 +1,28 @@
+doctype html
+html(lang='en')
+  head
+    title #{title} | Bookings & Reservation
+    link(rel='stylesheet' href='./css/style.css')
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(name="description", content="Bookings&Reservation provides you with service and quality like no other. The place to get the best halls for the best prices")
+    meta(name="keywords", content="bookings&reservation, bookings and reservation, bookings, reservation, halls, events, event centres")
+    link(rel="shortcut icon", href="./images/favicon.jpg", type="image/jpg")
+    link(rel="stylesheet", href="./css/all.min.css")
+  
+.login-container
+  form#register-form.login-form(action='')
+    .input-flex
+      label.form__label(for='firstname')
+        input.form__input(type='text' name='firstname' placeholder='Firstname' autocomplete="given-name")
+      label.form__label(for='lastname')
+        input#lastname.form__input(type='text' name='lastname' placeholder='Lastname' autocomplete="family-name")
+    .input-flex
+      label.form__label(for='password')
+        input.form__input(type='password' name='password' placeholder='Password' autocomplete="current-password")
+      label.form__label(for='confirmPassword')
+        input#confirmPassword.form__input(type='password' name='confirmPassword' placeholder='Confirm Password' autocomplete="current-password")
+    label.form__label(for='email')
+      input#email.form__input(type='email' name='email' placeholder='Email ' autocomplete="email")
+    label.form__label(for='submit')
+      input.form__input.bg-green(type='submit' value='SUBMIT')
+script(src='./bundle.js')

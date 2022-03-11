@@ -1,0 +1,30 @@
+doctype html
+html(lang='en')
+  head
+    title #{title} | Bookings & Reservation
+    link(rel='stylesheet' href='/css/style.css')
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(name="description", content="Bookings&Reservation provides you with service and quality like no other. The place to get the best halls for the best prices")
+    meta(name="keywords", content="bookings&reservation, bookings and reservation, bookings, reservation, halls, events, event centres")
+    //- script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js")
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    link(rel="shortcut icon", href="/images/favicon.jpg", type="image/jpg")
+    link(rel="stylesheet", href="/css/all.min.css")
+
+
+  body
+    //- HEADER
+    include _header
+    //- div#menu
+    //-   ul.mobilenav
+    //-     li.mobilenav-link
+    //-       a(href="/") Home
+    //-     li.mobilenav-link
+    //-       a(href="/halls") Halls
+    //-     li.mobilenav-link
+    //-       a(href="/bookings") Bookings
+    //-     li.mobilenav-link#logout
+    //-       a() Logout
+    block content
+      h1 This is a placeholder file
+    include _footer

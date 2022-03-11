@@ -1,0 +1,82 @@
+extends base
+
+block content
+  main
+    // Grid of bookings cards goes here. 4 * 5 rows.
+    // Implement pagination
+    .main__content
+      .input-group
+        label.form__label
+          button#export.form__input.btn--brown Download 
+        label.form__label
+          a(href="/book").form__input.btn--green Book
+      form(id="search-bookings-form")
+        input#search-bookings.form__input(type='text' name='search-input' placeholder='Search by hallname....')
+      .card-container
+        each booking in bookings
+          .card
+            .card__details
+              h4.card__sub-heading #{booking.clientName}
+              p.card__text Client Email: #{booking.clientEmail}
+              p.card__text Event: #{booking.event}
+              .card__data
+                span
+                  | Attendance: #{booking.attendance}
+              .card__data
+                span
+                  | Hallname: #{booking.hallname}
+              .card__data
+                span
+                  |Client Tel: #{booking.clientPhoneNumber}
+              .card__data
+                span
+                  |Created At: #{booking.createdAt.toDateString()}
+              #booking 
+                if booking.updatedAt
+                  span
+                    |updated At: #{booking.updatedAt.toDateString()}
+            .card__footer
+              p
+                span.card__footer-value From: 
+                span.card__footer-text #{booking.bookedFrom.toDateString()}
+              p.card__ratings
+                span.card__footer-value To: 
+                span.card__footer-text #{booking.bookedTo.toDateString()}
+              a.btn.btn--green(href=`/bookings/${booking.id}`) Update
+          
+      .pagination
+        ul.pagination__list
+      .getAvailable
+        button#av-btn.btn.btn--green(type='button')
+          | Click to get Availble Dates
+        .hidden.login-form
+          form#availability-form
+            .input-group
+              label.form__label(for='from')
+                | From
+                input.form__input(type='date' placeholder='From' name='from')
+              label.form__label(for='to')
+                | To
+                input.form__input(type='date' placeholder='To' name='to')
+            .input-group
+              label.form__label(for='hallname')
+                select#hallname.form__input(name='hallname')
+                  option(value="Abuja Hall") Abuja Hall
+                  option(value="Africa Hall") Africa Hall
+                  option(value="Arcade Hall") Arcade Hall
+                  option(value="Aso Hall") Aso Hall
+                  option(value="Banquet Hall") Banquet Hall
+                  option(value="Benue Hall") Benue Hall
+                  option(value="Executive Hall") Executive Hall
+                  option(value="Lake Chad") Lake Chad
+                  option(value="Niger Hall") Niger Hall
+                  option(value="Office Space") Office Space
+                  option(value="Open Space") Open Space
+                  option(value="Peace Garden") Peace Garden
+                  option(value="Suleja Hall") Suleja Hall
+                  option(value="Taraba Hall") Taraba Hall
+              label.form__label(for='')
+                button.bg-green.form__input(type='submit')
+                  | Get
+          .results
+            ul.results-ul

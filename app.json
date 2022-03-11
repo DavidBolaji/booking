@@ -1,0 +1,7 @@
+{
+	"name": "bookingreservation",
+	"description": "an event centre reservation website",
+	"repository": "https://git.heroku.com/bookingreservation",
+	"author": "Avalon Technologies",
+	"image": "heroku node_js"
+}
