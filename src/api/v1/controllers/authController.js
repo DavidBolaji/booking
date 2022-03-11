@@ -30,10 +30,10 @@ exports.signup = async (req, res, next) => {
 			password: req.body.password,
 			confirmPassword: req.body.confirmPassword,
 		});
-		try {
-			const emailHandler = new Email(newStaff, null);
-			await emailHandler.sendWelcome();
-		} catch (error) {}
+		// try {
+		// 	const emailHandler = new Email(newStaff, null);
+		// 	await emailHandler.sendWelcome();
+		// } catch (error) {}
 		return createAndSendToken(newStaff, res, 201);
 	} catch (error) {
 		return next(
