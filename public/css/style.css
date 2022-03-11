@@ -59,7 +59,7 @@ ul {
 	-webkit-box-pack: center;
 	-ms-flex-pack: center;
 }
-.nav {
+.navh {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -71,25 +71,25 @@ ul {
 	-ms-flex-pack: justify;
 	width: 100%;
 }
-.nav a {
+.navh a {
 	color: #fff;
 }
 @media only screen and (max-width: 62.5em) {
-	.nav .links,
-	.nav .title {
+	.navh .links,
+	.navh .title {
 		display: none;
 	}
 }
-.nav__title {
+.navh__title {
 	color: #fff;
 	text-transform: uppercase;
 	font-size: 1.4rem;
 	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
 		'Lucida Sans', Arial, sans-serif;
 }
-.nav__link,
-.nav__link:link,
-.nav__link:visited {
+.navh__link,
+.navh__link:link,
+.navh__link:visited {
 	color: #f7f7f7;
 	text-transform: uppercase;
 	font-size: 1rem;
@@ -113,13 +113,13 @@ ul {
 	cursor: pointer;
 	font-family: inherit;
 }
-.nav__link:hover,
-.nav__link:active {
+.navh__link:hover,
+.navh__link:active {
 	-webkit-transform: translateY(-2px);
 	transform: translateY(-2px);
 	text-shadow: 0 0.7rem 1rem black;
 }
-.nav__link:not(:last-child) {
+.navh__link:not(:last-child) {
 	margin-right: 2rem;
 }
 .menu {
