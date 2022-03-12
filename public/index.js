@@ -56,8 +56,7 @@ if (calenderContEdit) {
         let lastDay = new Date(date.getFullYear(),date.getMonth() + 1, 0).getDate();
         // days of month
         let days = ''; 
-        // 
-        // let dayPerTime = [];
+        
         // booked data from database
         let databaseBooked = [];
         // booked db days
@@ -68,11 +67,6 @@ if (calenderContEdit) {
         let bookingDates = [];
 
         let booked = []
-
-        // const bookedDate = new Date(el.bookedFrom);
-        // bookedDate.setDate(bookedDate.getDate() + counter);
-        // let bookings =  []
-        // start.push(counter)
 
         return {
 
@@ -751,7 +745,146 @@ if (calenderCont) {
         let multiple = []
 
         let hall = ''
+
+        let hallDetails = {
+            TarabaHall: {
+                hallname: 'Taraba Hall',
+                amount: 200000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 80000
+            },
+            SulejaGarden: {
+                hallname: 'Suleja Garden',
+                amount: 150000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 35000
+            },
+            ExecutiveHallConference: {
+                hallname: 'Executive Hall Conference',
+                amount: 1500000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 250000
+            },
+            ExecutiveLounge: {
+                hallname: 'Executive Lounge',
+                amount: 500000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 250000
+            },
+            ExecutiveHallWedding: {
+                hallname: 'Executive Hall wedding',
+                amount: 1800000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 250000
+            },
+            OfficeSpace: {
+                hallname: 'Executive Hall Conference',
+                amount: 120000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 50000
+            },
+            BenueHall: {
+                hallname: 'Benue Hall',
+                amount: 500000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 80000
+            },
+            NigerHall: {
+                hallname: 'Niger Hall',
+                amount: 500000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 80000
+            },
+            BanquetHall: {
+                hallname: 'Banquet Hall',
+                amount: 300000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 100000
+            },
+            AsoHall: {
+                hallname: 'Aso Hall',
+                amount: 700000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 100000
+            },
+            ArcadeHall: {
+                hallname: 'Arcade Hall',
+                amount: 250000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 70000
+            },
+            AfricaHallConference: {
+                hallname: 'Africa Hall/Foyer Conference',
+                amount: 4000000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 440000
+            },
+            AfricaHallWedding: {
+                hallname: 'Africa Hall Wedding',
+                amount: 5000000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 440000
+            },
+            AfricaHallGalleria: {
+                hallname: 'Africa Hall Galleria',
+                amount: 200000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 80000
+            }
+    
+        }
+
+
         return {
+
+            getPayment: function(data) {
+                let foundHall = {}
+                let newString = this.mergeStrings(data);
+                for (const halls in hallDetails) {
+                    if(halls === newString) {
+                        foundHall = {...hallDetails[halls]}
+                    };
+                }
+                let res = this.calcPayment(foundHall);
+                return res;
+            },
+
+            mergeStrings: function (data) {
+                let name = data.split(' ');
+                let newName = '';
+
+                for (let n = 0; n < name.length; n++) {
+                    newName += name[n];
+                }
+
+                return newName;
+            },
+            calcPayment: function(data) {
+                
+                return {
+                    amount: data.amount,
+                    charge: (data.serviceCharge/100) * data.amount,
+                    vat: (data.vat/100) * data.amount,
+                    refund: data.refund,
+                    total: data.amount + ((data.serviceCharge/100) * data.amount) + ((data.vat/100) * data.amount)
+                }
+                
+
+            },
 
             setHall: function (data) {
                 hall = data
@@ -1266,7 +1399,7 @@ if (calenderCont) {
             let newFilter = Array.from(document.querySelectorAll('.calender__days div')).filter(div => !calCtrl.returnFilterAndStartDate().dbBookedDays.includes(div.id));
 
             // console.log(newFilter);
-
+            // modal.classList.remove('active')
             Array.from(document.querySelectorAll('.calender__days div')).forEach(div => {
                 calCtrl.returnFilterAndStartDate().dbStartDays.forEach(sDay => {
                     if (div.id === sDay) {
@@ -1274,11 +1407,22 @@ if (calenderCont) {
                             calCtrl.getbookedDataOnHover(document.querySelector('#hallname').value,  calCtrl.convertWordToUtc(e.target.id)).then(resp => {
                                 modal.classList.add('active')
 
-                                    UIctrl.showModal(resp);
+                                UIctrl.showModal(resp);
+                            })
+                        })
+                    }
+                })
+            });
 
-                                setTimeout(() => {
-                                    modal.classList.remove('active')
-                                }, 5000);
+
+            Array.from(document.querySelectorAll('.calender__days div')).forEach(div => {
+                calCtrl.returnFilterAndStartDate().dbStartDays.forEach(sDay => {
+                    if (div.id === sDay) {
+                        div.addEventListener('mouseout',(e) => {
+                            calCtrl.getbookedDataOnHover(document.querySelector('#hallname').value,  calCtrl.convertWordToUtc(e.target.id)).then(resp => {
+                                modal.classList.toggle('active')
+
+                                // UIctrl.showModal(resp);
                             })
                         })
                     }
@@ -1304,6 +1448,52 @@ if (calenderCont) {
             calCtrl.filterMultiple();
 
             calCtrl.setBookingDates([])
+
+
+            let paymentDetails = calCtrl.getPayment(document.querySelector('#hallname')?.value)
+
+            document.querySelector('.payment__details').classList.remove('visible')
+            document.querySelector('.payment__details').classList.add('visible')
+
+            document.querySelector('.payment__details').innerHTML = 
+            `<div class="payment__amount">
+                <div> Amount </div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.amount)}</div>
+                </div>
+            </div>
+            <div class="payment__charge"> 
+                <div>charges (10%)</div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.charge)}</div>
+                </div>
+            </div>
+            <div class="payment__vat">
+                <div> VAT (7.5%)</div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.vat)}</div>
+                </div>
+            </div>
+            <div class="payment__refund"> 
+                <div>Refundable Caution: </div>
+                <div class="payment__money">
+                    <div>&#8358 </div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.refund)}</div>
+                </div>
+            </div>
+            <div class="payment__amount">
+                <div> Total </div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.total)}</div>
+                </div>
+            </div>`
+
+
+
 
 
             calCtrl.returnBooked(document.querySelector('#hallname')?.value, from, to).then(result => {
@@ -1520,6 +1710,7 @@ const calenderPageController = (function(){
     let days = ''; 
   
     let databaseBooked = [];
+
 
 
     return {
@@ -1792,7 +1983,7 @@ var controller = (function(calCtrl, UIctrl) {
                                     
                             if (p.id === calCtrl.convertUtctoWord(data.bookedFrom)) {
                                 console.log("inside " +p.id);
-                                p.insertAdjacentHTML('beforeend', `<p class="detail single" onmouseover="hoverDetail(this)">${data.hallname}</p>`)
+                                p.insertAdjacentHTML('beforeend', `<p class="detail single" onmouseover="hoverDetail(this)" onmouseout="hoverDetailR(this)">${data.hallname}</p>`)
 
                                 // p.addEventListener('mouseover', hoverDetail)
                             }
@@ -1809,7 +2000,7 @@ var controller = (function(calCtrl, UIctrl) {
                                 dayDate ? Array.from(dayDate.childNodes).forEach(d => {
                                     
                                     if (d?.id === calCtrl.convertUtctoWord(startDaySort)) {
-                                        d.insertAdjacentHTML('beforeend', `<p class="detail booked" onmouseover="hoverDetail(this)">${data.hallname}</p>`);
+                                        d.insertAdjacentHTML('beforeend', `<p class="detail booked" onmouseover="hoverDetail(this)" onmouseout="hoverDetailR(this)">${data.hallname}</p>`);
 
                                         // d.addEventListener('mouseover', hoverDetail)
                                     }
@@ -1915,12 +2106,26 @@ const hoverDetail = (e) => {
         modal.classList.add('active')
 
         UIPageController.showModal(res);
-
-        setTimeout(() => {
-            modal.classList.remove('active')
-        }, 5000);
     })
 }
+
+
+const hoverDetailR = (e) => {
+    const id = e.parentElement.id;
+    const place = e.textContent;
+    
+    calenderPageController.getbookedDataOnHover(place, calenderPageController.convertWordToUtc(id)).then(res => {
+        // console.log(res);
+
+        modal.classList.toggle('active')
+
+        // UIPageController.showModal(res);
+    })
+}
+
+
+
+
 
 // bookings-page-table
 if(document.querySelector('.tab')) {
@@ -2305,6 +2510,12 @@ if(document.querySelector('.bin')) {
 
     })();
 }
+
+
+
+
+
+
 
 
 const runDelete = (e) => {

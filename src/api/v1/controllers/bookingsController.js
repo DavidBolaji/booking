@@ -216,10 +216,7 @@ exports.deleteAllBookings = async (req, res, next) => {
 exports.deleteSingleBooking = async (req, res, next) => {
 	try {
 		const { id } = req.params;
-		console.log(id);
 		const bookBin = await Booking.find({_id: id});
-
-		console.log(bookBin);
 
 		if (bookBin) {
 			const bin = await Bin.create({
@@ -232,8 +229,6 @@ exports.deleteSingleBooking = async (req, res, next) => {
 				bookedFrom: bookBin[0].bookedFrom && bookBin[0].bookedFrom,
 				bookedTo: bookBin[0].bookedTo && bookBin[0].bookedTo,
 			})
-
-			console.log(bin);
 
 			if (!bin) throw new Error('ERROR')
 

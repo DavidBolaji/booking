@@ -95,8 +95,8 @@ if (searchBar) {
 		const searchParam = document.querySelector('input[name="search-input"]')
 			.value;
 		const input = capitalizeLet(searchParam);
-		return;
-		// searchByHallname(input);
+		// return;
+		searchByHallname(input);
 	});
 }
 if (availabilityForm) {

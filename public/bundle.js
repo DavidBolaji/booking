@@ -8724,8 +8724,9 @@ if (searchBar) {
   searchBar.addEventListener('submit', function (e) {
     e.preventDefault();
     var searchParam = document.querySelector('input[name="search-input"]').value;
-    var input = capitalizeLet(searchParam);
-    return; // searchByHallname(input);
+    var input = capitalizeLet(searchParam); // return;
+
+    searchByHallname(input);
   });
 }
 

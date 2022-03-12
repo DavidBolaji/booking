@@ -12,9 +12,9 @@ const createAndSendToken = (user, res, statusCode) => {
 		expires: new Date(Date.now() + process.env.JWT_EXPIRES_IN * 24 * 3600000),
 		httpOnly: true,
 	};
-	// if (process.env.NODE_ENV === 'production') {
-	// 	cookieOptions.secure = true;
-	// }
+	if (process.env.NODE_ENV === 'production') {
+		cookieOptions.secure = true;
+	}
 	res.cookie('jwt', token, cookieOptions);
 
 	user.password = undefined;
