@@ -31,11 +31,16 @@ block content
               .card__data
                 span
                   |Created At: #{booking.createdAt.toDateString()}
+                 
               #booking 
                 if booking.updatedAt
                   span
                     |updated At: #{booking.updatedAt.toDateString()}
             .card__footer
+             
+              .tot
+                .tot_cur Total: &#8358 
+                .tot_amount #{new Intl.NumberFormat().format(booking.total)} #{booking.paid ? 'paid' : 'unpaid'}
               p
                 span.card__footer-value From: 
                 span.card__footer-text #{booking.bookedFrom.toDateString()}

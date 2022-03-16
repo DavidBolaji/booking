@@ -68,5 +68,9 @@ block content
       //-   label.form__label(for='bookedTo')
       //-     | End
       //-     input#bookedTo.form__input(type='date' name='bookedTo' placeholder='End')
-      label.form__label
-        button.form__input.bg-green SUBMIT
+      form
+        .coupon 
+          input.payment__discount(placeholder="Enter Discount" oninput="isNumber(this.value)")
+          button(type="submit" class="coupon__input") Apply
+        label.form__label
+          button.form__input.bg-green SUBMIT

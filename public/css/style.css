@@ -841,7 +841,30 @@ span.date-date {
 }
 
 
+.payment__discount:invalid {
+	border: 3px solid red;
+}
 
+
+.input-group_money {
+	margin-top: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.input-group_money input {
+	padding: 5px 10px;
+	flex: 1;
+	/* width: 100%; */
+}
+
+.input-group_money select {
+	padding: 5px 10px;
+	flex: 1;
+	/* width: 100%; */
+}
 
 
 
@@ -1415,3 +1438,35 @@ input[type='submit'] {
 	display: block;
 }
 
+.coupon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.payment__discount {
+	flex: 0.75;
+	width: 95%;
+	margin-bottom: 10px;
+	padding: 5px 10px;
+	outline: none;
+	border: transparent;
+}
+
+
+.coupon button {
+	margin-bottom: 10px;
+	flex: 0.2;
+	padding: 5px 10px;
+	cursor: pointer;
+	background-color: #20bf6b;
+	border: 1px solid #20bf6b;
+	color: #fff;
+	text-transform: uppercase;
+}
+
+.tot {
+	width: 150%;
+	font-size: 14px;
+	display: flex;
+}

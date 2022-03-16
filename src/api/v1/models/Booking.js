@@ -51,6 +51,14 @@ const BookingSchema = new mongoose.Schema({
 		max: [3000, 'Due to health regulations, attendance must be less than 3000'],
 		default: 100,
 	},
+	paid: {
+		type: Boolean,
+		default: false,
+	},
+	total: {
+		type: Number,
+		required: true
+	},
 	bookedFrom: Date,
 	bookedTo: {
 		type: Date,
@@ -58,7 +66,6 @@ const BookingSchema = new mongoose.Schema({
 	createdAt: {
 		type: Date,
 		default: Date.now(),
-		// select: 0,
 	},
 },{
 	timestamps: true

@@ -133,7 +133,7 @@ if (calenderContEdit) {
                     // check if more than two days are selected
                     if (bookingDates.length > 1) {
                         bookingDates = [];
-                    throw new Error('PLEASE SELECT ONLY TWO DATES, START AND END');
+                        throw new Error('PLEASE SELECT ONLY TWO DATES, START AND END');
                     } else {
 
                         try {
@@ -431,6 +431,7 @@ if (calenderContEdit) {
                         },
                         { withCredentials: true }
                     );
+                    console.log(res);
                     if (res.status === 201) {
                         return res;
                     }
@@ -461,6 +462,10 @@ if (calenderContEdit) {
             },
             // get input values for submit
             getBookedValueE: function () {
+                var a = document.querySelector('.total')?.value;
+               
+                a=a?.replace(/\,/g,''); 
+                a=parseInt(a,10);
                 return {
                     clientName: document.querySelector('#clientNameE').value,
                     clientTel: document.querySelector('#clientTelE').value,
@@ -469,6 +474,8 @@ if (calenderContEdit) {
                     attendance: document.querySelector('#attendanceE').value,
                     event: document.querySelector('#eventE').value,
                     bookedFrom: document.querySelectorAll('.active'),
+                    total: a,
+                    paid: document.querySelector('#paid').value,
                 }
             },
 
@@ -848,10 +855,36 @@ if (calenderCont) {
     
         }
 
+        let curPay = {}
+
 
         return {
 
+            updatePayment: function(data,daysdiff, disc='') {
+                console.log(disc);
+                console.log(data);
+                console.log(daysdiff);
+                let amount; 
+                if (disc !== '') {
+                    amount = (disc/100) * (data.amount * daysdiff)
+                } else {
+                   amount = data.amount * daysdiff;
+                }
+
+                console.log(amount);
+                
+                
+                return {
+                    amount,
+                    charge: (10/100) * amount,
+                    vat: (7.5/100) * amount,
+                    refund: data.refund,
+                    total: amount + ((10/100) * amount) + ((7.5/100) * amount)
+                }
+            },
+
             getPayment: function(data) {
+                // curPay = {}
                 let foundHall = {}
                 let newString = this.mergeStrings(data);
                 for (const halls in hallDetails) {
@@ -860,6 +893,7 @@ if (calenderCont) {
                     };
                 }
                 let res = this.calcPayment(foundHall);
+                curPay = {...res}
                 return res;
             },
 
@@ -939,14 +973,14 @@ if (calenderCont) {
                 }
             },
 
-            submitData: async function (options) {
+            submitData: async function () {
                 try {
                     
                     const res = await axios(
                         {
                             method: 'POST',
                             url: `${location.protocol}//${location.host}/api/v1/bookings/many`,
-                            data: [ ...options ],
+                            data: multiple,
                         },
                         {
                             withCredentials: true,
@@ -1012,13 +1046,13 @@ if (calenderCont) {
             },
 
             addDate: function (date, hall, cb) {
-                console.log(bookingDates);
-                console.log(databaseBooked);
+               
                 console.log(date)
                 try {
                     // check if more than two days are selected
                     if (bookingDates.length > 1) {
                         bookingDates = [];
+                        
                     throw new Error('PLEASE SELECT ONLY TWO DATES, START AND END');
                     } else {
 
@@ -1325,6 +1359,10 @@ if (calenderCont) {
             },
             // get input values for submit
             getBookedValue: function () {
+                var a = document.querySelector('.money__change')?.textContent;
+               
+                a=a?.replace(/\,/g,''); 
+                a=parseInt(a,10);
                 return {
                     clientName: document.querySelector('#clientName')?.value,
                     clientTel: document.querySelector('#clientTel')?.value,
@@ -1333,6 +1371,7 @@ if (calenderCont) {
                     attendance: document.querySelector('#attendance')?.value,
                     event: document.querySelector('#event')?.value,
                     bookedFrom: document.querySelectorAll('.active'),
+                    total: a,
                 }
             },
 
@@ -1360,6 +1399,179 @@ if (calenderCont) {
     //  App Controller
     var controller = (function(calCtrl, UIctrl) {
 
+        const couponBtn = document.querySelector('.coupon__input');
+        const couponInput = document.querySelector('.payment__discount');
+
+        const applyDiscount = (e) => {
+            e.preventDefault()
+            const discountPercentage = couponInput.value;
+
+            let days = calCtrl.getBookingDates()
+
+            let bookedDays = 0
+            if(days.length <= 1) {
+                bookedDays = 1
+            } else {
+                bookedDays = calCtrl.dateDiff(days[0],days[1])
+                // bookedDays += 1 
+            }
+
+            const paymentDetails = calCtrl.updatePayment(calCtrl.getPayment(document.querySelector('#hallname')?.value),(bookedDays + 1), +discountPercentage)
+
+            // let paymentDetails = calCtrl.getPayment(document.querySelector('#hallname')?.value)
+
+            document.querySelector('.payment__details').classList.remove('visible')
+            document.querySelector('.payment__details').classList.add('visible')
+
+            document.querySelector('.payment__details').innerHTML = "";
+
+            document.querySelector('.payment__details').innerHTML = 
+            `
+            <div class="payment__amount">
+                <div> Amount x ${bookedDays} days </div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.amount)}</div>
+                </div>
+            </div>
+            <div class="payment__charge"> 
+                <div>charges (10%)</div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.charge)}</div>
+                </div>
+            </div>
+            <div class="payment__vat">
+                <div> VAT (7.5%)</div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.vat)}</div>
+                </div>
+            </div>
+            <div class="payment__refund"> 
+                <div>Refundable Caution: </div>
+                <div class="payment__money">
+                    <div>&#8358 </div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.refund)}</div>
+                </div>
+            </div>
+            <div class="payment__amount">
+                <div> Total:  => </div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div class="money__change">${new Intl.NumberFormat().format(paymentDetails.total)}</div>
+                </div>
+            </div>`
+        }
+
+        couponBtn.addEventListener('click', applyDiscount)
+
+        const calculateDaysBooked = (days) => {
+            let bookedDays = 0
+            if(days.length <= 1) {
+                bookedDays = 1
+            } else {
+                bookedDays = calCtrl.dateDiff(days[0],days[1])
+                bookedDays += 1 
+            }
+
+            const paymentDetails = calCtrl.updatePayment(calCtrl.getPayment(document.querySelector('#hallname')?.value),bookedDays)
+
+            // let paymentDetails = calCtrl.getPayment(document.querySelector('#hallname')?.value)
+
+            document.querySelector('.payment__details').classList.remove('visible')
+            document.querySelector('.payment__details').classList.add('visible')
+
+            document.querySelector('.payment__details').innerHTML = "";
+
+            document.querySelector('.payment__details').innerHTML = 
+            `
+            <div class="payment__amount">
+                <div> Amount x ${bookedDays} days </div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.amount)}</div>
+                </div>
+            </div>
+            <div class="payment__charge"> 
+                <div>charges (10%)</div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.charge)}</div>
+                </div>
+            </div>
+            <div class="payment__vat">
+                <div> VAT (7.5%)</div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.vat)}</div>
+                </div>
+            </div>
+            <div class="payment__refund"> 
+                <div>Refundable Caution: </div>
+                <div class="payment__money">
+                    <div>&#8358 </div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.refund)}</div>
+                </div>
+            </div>
+            <div class="payment__amount">
+                <div> Total:  => </div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div class="money__change">${new Intl.NumberFormat().format(paymentDetails.total)}</div>
+                </div>
+            </div>`
+
+
+        }
+
+        const renderpaymentData = () => {
+
+            let paymentDetails = calCtrl.getPayment(document.querySelector('#hallname')?.value)
+
+            document.querySelector('.payment__details').classList.remove('visible')
+            document.querySelector('.payment__details').classList.add('visible')
+
+            document.querySelector('.payment__details').innerHTML = 
+            `
+            <div class="payment__amount">
+                <div> Amount </div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.amount)}</div>
+                </div>
+            </div>
+            <div class="payment__charge"> 
+                <div>charges (10%)</div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.charge)}</div>
+                </div>
+            </div>
+            <div class="payment__vat">
+                <div> VAT (7.5%)</div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.vat)}</div>
+                </div>
+            </div>
+            <div class="payment__refund"> 
+                <div>Refundable Caution: </div>
+                <div class="payment__money">
+                    <div>&#8358 </div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.refund)}</div>
+                </div>
+            </div>
+            <div class="payment__amount">
+                <div> Total </div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div class="money__change">${new Intl.NumberFormat().format(paymentDetails.total)}</div>
+                </div>
+            </div>`
+
+        }
+
         const clickDate = (e) => {
             e.target.classList.toggle('active')
 
@@ -1384,7 +1596,8 @@ if (calenderCont) {
                     })
                     renderAndAddEvent();
                 } else {
-                    console.log(cb);
+                    calculateDaysBooked(cb);
+                    // let paymentDetails = calCtrl.getPayment(document.querySelector('#hallname')?.value)
                 }
             })
             
@@ -1449,52 +1662,7 @@ if (calenderCont) {
 
             calCtrl.setBookingDates([])
 
-
-            let paymentDetails = calCtrl.getPayment(document.querySelector('#hallname')?.value)
-
-            document.querySelector('.payment__details').classList.remove('visible')
-            document.querySelector('.payment__details').classList.add('visible')
-
-            document.querySelector('.payment__details').innerHTML = 
-            `<div class="payment__amount">
-                <div> Amount </div>
-                <div class="payment__money">
-                    <div>&#8358</div>
-                    <div>${new Intl.NumberFormat().format(paymentDetails.amount)}</div>
-                </div>
-            </div>
-            <div class="payment__charge"> 
-                <div>charges (10%)</div>
-                <div class="payment__money">
-                    <div>&#8358</div>
-                    <div>${new Intl.NumberFormat().format(paymentDetails.charge)}</div>
-                </div>
-            </div>
-            <div class="payment__vat">
-                <div> VAT (7.5%)</div>
-                <div class="payment__money">
-                    <div>&#8358</div>
-                    <div>${new Intl.NumberFormat().format(paymentDetails.vat)}</div>
-                </div>
-            </div>
-            <div class="payment__refund"> 
-                <div>Refundable Caution: </div>
-                <div class="payment__money">
-                    <div>&#8358 </div>
-                    <div>${new Intl.NumberFormat().format(paymentDetails.refund)}</div>
-                </div>
-            </div>
-            <div class="payment__amount">
-                <div> Total </div>
-                <div class="payment__money">
-                    <div>&#8358</div>
-                    <div>${new Intl.NumberFormat().format(paymentDetails.total)}</div>
-                </div>
-            </div>`
-
-
-
-
+            renderpaymentData()
 
             calCtrl.returnBooked(document.querySelector('#hallname')?.value, from, to).then(result => {
                 calCtrl.clearBooked(Array.from(document.querySelectorAll('.calender__days div')))
@@ -1618,7 +1786,7 @@ if (calenderCont) {
 
             calCtrl.submitData(multipleData).then(res => {
                 if (res.status === 201) {
-                    UIctrl.showAlert('success', 'Multiple Booking successful');
+                    UIctrl.showAlert('success', 'Booking successful');
                     window.setTimeout(() => {
                         location.assign('/bookings');
                     }, 1500);
@@ -2212,7 +2380,7 @@ if(document.querySelector('.tab')) {
             
             let html = ''
             data.forEach(value => {
-                html += `<tr><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${'paid'}</td><td><i onClick="runDelete(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><a onClick="return confirm('are you sure you want to update')" href="/bookings/${value._id}"><i id=${value._id}  class="fa fa-edit" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></a></td></tr>`
+                html += `<tr><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${!value.paid? 'unpaid': 'paid'}</td><td><i onClick="runDelete(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><a onClick="return confirm('are you sure you want to update')" href="/bookings/${value._id}"><i id=${value._id}  class="fa fa-edit" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></a></td></tr>`
             })
 
             setValue(html)
@@ -2222,7 +2390,7 @@ if(document.querySelector('.tab')) {
             
             let html = ''
             data.forEach(value => {
-                html += `<tr><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${'paid'}</td><td><i onClick="runDelete(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><a onClick="return confirm('are you sure you want to update')" href="/bookings/${value._id}"><i class="fa fa-edit" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></a></td></tr>`
+                html += `<tr><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${!value.paid? 'unpaid': 'paid'}</td><td><i onClick="runDelete(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><a onClick="return confirm('are you sure you want to update')" href="/bookings/${value._id}"><i class="fa fa-edit" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></a></td></tr>`
             })
 
             setFilter(html)
@@ -2386,7 +2554,7 @@ if(document.querySelector('.bin')) {
             
             let html = ''
             data.forEach(value => {
-                html += `<tr class="bin"><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${'paid'}</td><td><i onClick="runDeleteP(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><i id=${value._id} onClick="runRestore(this)"  class="fa fa-refresh" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></td></tr>`
+                html += `<tr class="bin"><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${!value.paid? 'unpaid': 'paid'}</td><td><i onClick="runDeleteP(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><i id=${value._id} onClick="runRestore(this)"  class="fa fa-refresh" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></td></tr>`
             })
 
             // console.log(html);
@@ -2413,7 +2581,7 @@ if(document.querySelector('.bin')) {
             
             let html = ''
             data.forEach(value => {
-                html += `<tr class="bin"><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${'paid'}</td><td><i onClick="runDeleteP(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><i id=${value._id} onClick="runRestore(this)"  class="fa fa-refresh" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></td></tr>`
+                html += `<tr class="bin"><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${!value.paid? 'unpaid': 'paid'}</td><td><i onClick="runDeleteP(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><i id=${value._id} onClick="runRestore(this)"  class="fa fa-refresh" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></td></tr>`
             })
 
             // console.log(html);
@@ -2626,3 +2794,24 @@ const showAlert = (type, message, delayed) => {
 }
 
 
+
+const isNumber = (e) => {
+
+    let inputVal = ''
+
+    let discount = document.querySelector('.payment__discount').value;
+
+    let newDiscount = discount.split('');
+
+    for (var i = 0; i <= newDiscount.length; i++ ) {
+
+        if(['0','1','2','3','4','5','6','7','8','9'].includes(newDiscount[i])) {
+            inputVal += newDiscount[i]
+        }
+    }
+
+    document.querySelector('.payment__discount').value = '';
+    
+    document.querySelector('.payment__discount').value = inputVal;
+    
+}

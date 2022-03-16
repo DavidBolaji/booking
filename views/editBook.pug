@@ -16,6 +16,14 @@ block content
           input#halnameE.form__input(type="text", name="hallname" readonly value=`${booking.hallname}`)
         label(for='attendance')
           input#attendanceE.form__input(type='number' name='attendance' placeholder='Enter the event Attendance' min='5' max='3000' value=`${booking.attendance}`)
+      .input-group_money
+        label(for='total')
+          span &#8358
+          input.total(type="text", name="total" readonly value=`${new Intl.NumberFormat().format(booking.total)}`)
+        label(for='paid')
+          select#paid(name="paid")
+            option(value="unpaid") unpaid 
+            option(value="paid") paid  
       label.form__label(for='event')
         textarea#eventE.form__textarea(name='event' placeholder='Event Description' maxlength='500' minlength='5') #{booking.event}
       div.calender__container_edit

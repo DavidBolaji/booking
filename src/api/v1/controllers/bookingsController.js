@@ -111,6 +111,8 @@ exports.createBooking = async (req, res, next) => {
 			attendance: req.body.attendance,
 			bookedFrom: req.body.bookedFrom,
 			bookedTo: req.body.bookedTo,
+			total: req.body.total,
+			paid: req.body.paid
 		});
 		if (!newBooking) {
 			return next(new CustomError(400, 'Error processing your request'));
@@ -192,6 +194,8 @@ exports.updateBooking = async (req, res, next) => {
 					attendance: req.body[0].attendance,
 					bookedFrom: req.body[0].bookedFrom && req.body[0].bookedFrom,
 					bookedTo: req.body[0].bookedTo && req.body[0].bookedTo,
+					total: req.body[0].total,
+					paid: req.body[0].paid === 'unpaid'? false: true,
 				}
 			});
 		if (!updatedBooking) {
