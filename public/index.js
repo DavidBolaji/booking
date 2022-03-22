@@ -1143,7 +1143,7 @@ if (calenderContEdit) {
                     if (res.status === 201) {
                         UIEctrl.showAlert('success', 'Update successful, redirecting....');
                         window.setTimeout(() => {
-                            // location.assign('/bookings');
+                            location.assign('/bookings');
                         }, 1500);
                     }
                 }).catch(e => {
