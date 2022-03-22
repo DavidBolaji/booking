@@ -78,6 +78,8 @@ exports.createBin = async (req, res, next) => {
 			attendance: req.body.attendance,
 			bookedFrom: req.body.bookedFrom,
 			bookedTo: req.body.bookedTo,
+			total: req.body.total,
+			paid: req.body.paid
 		});
 		if (!newBin) {
 			return next(new CustomError(400, 'Error processing your request'));
@@ -294,6 +296,9 @@ exports.restoreBooking =  async (req, res, next) => {
 				attendance: bookBin[0].attendance,
 				bookedFrom: bookBin[0].bookedFrom && bookBin[0].bookedFrom,
 				bookedTo: bookBin[0].bookedTo && bookBin[0].bookedTo,
+				total: bookBin[0].total,
+				paid: bookBin[0].paid,
+				discount:  bookBin[0].discount
 			})
 	
 			console.log(booking);

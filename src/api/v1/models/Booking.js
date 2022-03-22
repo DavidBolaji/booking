@@ -59,6 +59,10 @@ const BookingSchema = new mongoose.Schema({
 		type: Number,
 		required: true
 	},
+	discount: {
+		type: Number,
+		default: 0
+	},
 	bookedFrom: Date,
 	bookedTo: {
 		type: Date,

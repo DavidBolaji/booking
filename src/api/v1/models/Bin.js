@@ -51,6 +51,18 @@ const BinSchema = new mongoose.Schema({
 		max: [3000, 'Due to health regulations, attendance must be less than 3000'],
 		default: 100,
 	},
+	paid: {
+		type: Boolean,
+		default: false,
+	},
+	total: {
+		type: Number,
+		required: true
+	},
+	discount: {
+		type: Number,
+		default: 0
+	},
 	bookedFrom: Date,
 	bookedTo: {
 		type: Date,

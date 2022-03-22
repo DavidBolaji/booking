@@ -66,9 +66,259 @@ if (calenderContEdit) {
 
         let bookingDates = [];
 
-        let booked = []
+        let booked = [];
+
+        let multiple = []
+
+        let hall = ''
+
+        let hallDetails = {
+            TarabaHall: {
+                hallname: 'Taraba Hall',
+                amount: 200000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 80000,
+                discount: 0
+            },
+            SulejaGarden: {
+                hallname: 'Suleja Garden',
+                amount: 150000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 35000,
+                discount: 0
+            },
+            ExecutiveHallConference: {
+                hallname: 'Executive Hall Conference',
+                amount: 1500000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 250000,
+                discount: 0
+            },
+            ExecutiveLounge: {
+                hallname: 'Executive Lounge',
+                amount: 500000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 250000,
+                discount: 0
+            },
+            ExecutiveHallWedding: {
+                hallname: 'Executive Hall wedding',
+                amount: 1800000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 250000,
+                discount: 0
+            },
+            OfficeSpace: {
+                hallname: 'Executive Hall Conference',
+                amount: 120000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 50000,
+                discount: 0
+            },
+            BenueHall: {
+                hallname: 'Benue Hall',
+                amount: 500000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 80000,
+                discount: 0
+            },
+            NigerHall: {
+                hallname: 'Niger Hall',
+                amount: 500000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 80000,
+                discount: 0
+            },
+            BanquetHall: {
+                hallname: 'Banquet Hall',
+                amount: 300000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 100000,
+                discount: 0
+            },
+            AsoHall: {
+                hallname: 'Aso Hall',
+                amount: 700000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 100000,
+                discount: 0
+            },
+            ArcadeHall: {
+                hallname: 'Arcade Hall',
+                amount: 250000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 70000,
+                discount: 0
+            },
+            AfricaHallConference: {
+                hallname: 'Africa Hall/Foyer Conference',
+                amount: 4000000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 440000,
+                discount: 0
+            },
+            AfricaHallWedding: {
+                hallname: 'Africa Hall Wedding',
+                amount: 5000000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 440000,
+                discount: 0
+            },
+            AfricaHallGalleria: {
+                hallname: 'Africa Hall Galleria',
+                amount: 200000,
+                serviceCharge: 10,
+                vat: 7.5,
+                refund: 80000,
+                discount: 0
+            }
+    
+        }
 
         return {
+
+            updatePayment: function(data,daysdiff, disc='') {
+                let amount; 
+                if (disc !== '') {
+                    (daysdiff - 1) > 1 ?
+                    amount = (data.amount * (daysdiff - 1)) - ((disc/100) * (data.amount * (daysdiff - 1))) :
+                    amount = data.amount - ((disc/100) * (data.amount))
+                } else {
+                   amount = data.amount * daysdiff;
+                }
+                
+                
+                return {
+                    amount,
+                    charge: (10/100) * data.amount,
+                    vat: (7.5/100) * data.amount,
+                    refund: data.refund,
+                    total: amount + ((10/100) * data.amount) + ((7.5/100) * data.amount),
+                    discount: data.discount + disc
+                }
+            },
+
+            getPayment: function(data) {
+                // curPay = {}
+                let foundHall = {}
+                let newString = this.mergeStrings(data);
+                for (const halls in hallDetails) {
+                    if(halls === newString) {
+                        foundHall = {...hallDetails[halls]}
+                    };
+                }
+                let res = this.calcPayment(foundHall);
+                curPay = {...res}
+                return res;
+            },
+
+            mergeStrings: function (data) {
+                let name = data.split(' ');
+                let newName = '';
+
+                for (let n = 0; n < name.length; n++) {
+                    newName += name[n];
+                }
+
+                return newName;
+            },
+            calcPayment: function(data) {
+                
+                return {
+                    discount: 0,
+                    amount: data.amount,
+                    charge: (data.serviceCharge/100) * data.amount,
+                    vat: (data.vat/100) * data.amount,
+                    refund: data.refund,
+                    total: data.amount + ((data.serviceCharge/100) * data.amount) + ((data.vat/100) * data.amount)
+                }
+                
+
+            },
+
+            setHall: function (data) {
+                hall = data
+            },
+
+            getHall: function() {
+                return hall
+            },
+
+            returnMultiple: function () {
+                return multiple;
+            },
+
+            filterMultiple: function () {
+                multiple = multiple?.filter(m => {
+                    return m?.bookedFrom.split('-')[0] != 'NaN'  
+                })
+
+            },
+
+            setMultiple: function (data) {
+                const multipleID = Array.from(data.bookedFrom).map(div => {
+                    return div.id;
+                });
+
+
+                multiple = multiple.filter(d => {
+                    return d?.hallname !== hall;
+                })
+                
+
+                if (bookingDates.length !== 1) {
+
+                    multiple.push({
+                        ...data,
+                        hallname: hall,
+                        clientPhoneNumber: data.clientTel,
+                        bookedFrom: this.convertWordToUtc(bookingDates[0]),
+                        bookedTo: this.convertWordToUtc(bookingDates[1])
+                    })
+                } else {
+                
+                    multiple.push({
+                        ...data,
+                        hallname: hall,
+                        clientPhoneNumber: data.clientTel,
+                        bookedFrom: this.convertWordToUtc(multipleID[0]),
+                        bookedTo: this.convertWordToUtc(multipleID[0])
+                    })
+                }
+            },
+
+            submitData: async function (options) {
+                try {
+                    
+                    const res = await axios(
+                        {
+                            method: 'POST',
+                            url: `${location.protocol}//${location.host}/api/v1/bookings/many`,
+                            data: [...options],
+                        },
+                        {
+                            withCredentials: true,
+                        }
+                    );
+                    
+                    return res;
+                } catch (error) {
+                    return 'error';
+                }
+            },
 
             returnFilterAndStartDate: function () { 
                 return {
@@ -77,9 +327,6 @@ if (calenderContEdit) {
                 }
             },
 
-            dateForClickEv: function() {
-                // filter = dbBookedDays.filter(bookedDay => dayPerTime.includes(bookedDay));
-            },
 
             setDiv: function(div) {
                 this.addBookedClass(div)
@@ -103,8 +350,6 @@ if (calenderContEdit) {
                     }
 
                 }
-
-                console.log(dbStartDays);
                 
             },
 
@@ -115,25 +360,24 @@ if (calenderContEdit) {
                     if (e.bookedFrom !== e.bookedTo) {
                         this.populateDbDays(this.dateDiff(e.bookedFrom, e.bookedTo), e.bookedFrom)
                     } else {
-                        console.log('entered equal');
+                        
                         dbStartDays.push(this.convertUtctoWord(e.bookedFrom, e.bookedFrom))
                         dbBookedDays.push(this.convertUtctoWord(e.bookedFrom, e.bookedFrom));
                     }
 
                 });
 
-                // console.log(dbBookedDays, dbStartDays);
+               
             },
 
             addDate: function (date, hall, cb) {
-                console.log(bookingDates);
-                console.log(databaseBooked);
-                console.log(date)
+               
                 try {
                     // check if more than two days are selected
                     if (bookingDates.length > 1) {
                         bookingDates = [];
-                        throw new Error('PLEASE SELECT ONLY TWO DATES, START AND END');
+                        
+                    throw new Error('PLEASE SELECT ONLY TWO DATES, START AND END');
                     } else {
 
                         try {
@@ -148,8 +392,6 @@ if (calenderContEdit) {
                                     const isOvalapping = databaseBooked.filter(dbBooked => {
                                         return new Date(this.convertWordToUtc(bookingDates[0])) < new Date(dbBooked.bookedFrom)  && new Date(this.convertWordToUtc(date)) > new Date(dbBooked.bookedTo);
                                     });
-
-                                    console.log(isOvalapping);
 
                                     try {
                                         // throw error on overlapping dates 
@@ -199,7 +441,6 @@ if (calenderContEdit) {
             },
 
             convertDateToMonth: function () {
-                
                 return date.toDateString().split(' ')[1];
             },
 
@@ -271,7 +512,6 @@ if (calenderContEdit) {
             returnBooked: async function(hallname, from, to) {
                 let baseUrl = window.location.href.split('/');
                 baseUrl = baseUrl[baseUrl.length - 1];
-                
                 try {
                     const res = await axios({
                         method: 'GET',
@@ -280,7 +520,6 @@ if (calenderContEdit) {
                     return res;
                 } catch (error) {
                     // showAlert('error', error.response.data.message);
-                    console.log(error);
                 }
             },
 
@@ -289,26 +528,27 @@ if (calenderContEdit) {
                     return div.id;
                 });
 
-            console.log(bookedID.length);
 
                 if (bookingDates.length !== 1) {
-                    console.log('entered is two');
+                   
                     booked.push({
                         ...data,
+                        discount:data.discount,
                         clientPhoneNumber: data.clientTel,
                         bookedFrom: this.convertWordToUtc(bookingDates[0]),
                         bookedTo: this.convertWordToUtc(bookingDates[1])
                     })
                 } else {
-                    console.log('entered is one');
+                   
                     booked.push({
                         ...data,
+                        discount:data.discount,
                         clientPhoneNumber: data.clientTel,
                         bookedFrom: this.convertWordToUtc(bookedID[0]),
                         bookedTo: this.convertWordToUtc(bookedID[0])
                     })
                 }
-                console.log(booked);
+               
             cb(booked);
             },
 
@@ -405,7 +645,6 @@ if (calenderContEdit) {
                     return res;
                 } catch (error) {
                     // showAlert('error', error.response.data.message);
-                    console.log(error);
                 }
             },
 
@@ -420,7 +659,6 @@ if (calenderContEdit) {
                 })
                 
             },
-
             updateOneBook: async function (options, id) {
                 try {
                     const res = await axios(
@@ -431,14 +669,14 @@ if (calenderContEdit) {
                         },
                         { withCredentials: true }
                     );
-                    console.log(res);
+                    
                     if (res.status === 201) {
                         return res;
                     }
                 } catch (error) {
                     console.log('error', 'Please select a date');
                 }
-            },
+            }
 
 
         }
@@ -462,10 +700,16 @@ if (calenderContEdit) {
             },
             // get input values for submit
             getBookedValueE: function () {
-                var a = document.querySelector('.total')?.value;
-               
+                var a = document.querySelector('.money__change')?.textContent;
                 a=a?.replace(/\,/g,''); 
                 a=parseInt(a,10);
+
+                var paid = document.querySelector('#paid')?.value;
+                paid === "paid" ? paid = true : paid = false;
+                // var a = document.querySelector('.total')?.value;
+               
+                // a=a?.replace(/\,/g,''); 
+                // a=parseInt(a,10);
                 return {
                     clientName: document.querySelector('#clientNameE').value,
                     clientTel: document.querySelector('#clientTelE').value,
@@ -474,8 +718,9 @@ if (calenderContEdit) {
                     attendance: document.querySelector('#attendanceE').value,
                     event: document.querySelector('#eventE').value,
                     bookedFrom: document.querySelectorAll('.active'),
+                    discount: document.querySelector('.payment__discount')?.value,
                     total: a,
-                    paid: document.querySelector('#paid').value,
+                    paid,
                 }
             },
 
@@ -501,7 +746,184 @@ if (calenderContEdit) {
     })();
 
     //  App Controller
-    var controllerE = (function(calECtrl, UIEctrl) {
+ var controllerE = (function(calECtrl, UIEctrl) {
+
+        const couponBtn = document.querySelector('.coupon__input');
+        const couponInput = document.querySelector('.payment__discount');
+
+        const applyDiscount = (e) => {
+            e.preventDefault()
+            const discountPercentage = couponInput.value;
+
+            let days = calECtrl.getBookingDates()
+
+            let bookedDays = 0
+            if(days.length <= 1) {
+                bookedDays = 1
+            } else {
+                bookedDays = calECtrl.dateDiff(days[0],days[1])
+                bookedDays += 1 
+            }
+
+            const paymentDetails = calECtrl.updatePayment(calECtrl.getPayment(document.querySelector('#halnameE')?.value),(bookedDays + 1), +discountPercentage);
+
+            couponInput.value = "";
+
+            // let paymentDetails = calECtrl.getPayment(document.querySelector('#halnameE')?.value)
+
+            document.querySelector('.payment__details').classList.remove('visible')
+            document.querySelector('.payment__details').classList.add('visible')
+
+            document.querySelector('.payment__details').innerHTML = "";
+
+            document.querySelector('.payment__details').innerHTML = 
+            `
+            <div class="payment__amount">
+                <div> Amount x ${bookedDays} days </div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.amount)}</div>
+                </div>
+            </div>
+            <div class="payment__charge"> 
+                <div>charges (10%)</div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.charge)}</div>
+                </div>
+            </div>
+            <div class="payment__vat">
+                <div> VAT (7.5%)</div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.vat)}</div>
+                </div>
+            </div>
+            <div class="payment__refund"> 
+                <div>Refundable Caution: </div>
+                <div class="payment__money">
+                    <div>&#8358 </div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.refund)}</div>
+                </div>
+            </div>
+            <div class="payment__amount">
+                <div> Total:  => </div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div class="money__change">${new Intl.NumberFormat().format(paymentDetails.total)}</div>
+                </div>
+            </div>`
+
+            document.querySelector('.payment__discount').value = paymentDetails.discount;
+        }
+
+        couponBtn.addEventListener('click', applyDiscount)
+
+        const calculateDaysBooked = (days) => {
+            let bookedDays = 0
+            if(days.length <= 1) {
+                bookedDays = 1
+            } else {
+                bookedDays = calECtrl.dateDiff(days[0],days[1])
+                bookedDays += 1 
+            }
+
+            const paymentDetails = calECtrl.updatePayment(calECtrl.getPayment(document.querySelector('#halnameE')?.value),bookedDays)
+
+            // let paymentDetails = calECtrl.getPayment(document.querySelector('#halnameE')?.value)
+
+            document.querySelector('.payment__details').classList.remove('visible')
+            document.querySelector('.payment__details').classList.add('visible')
+
+            document.querySelector('.payment__details').innerHTML = "";
+
+            document.querySelector('.payment__details').innerHTML = 
+            `
+            <div class="payment__amount">
+                <div> Amount x ${bookedDays} days </div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.amount)}</div>
+                </div>
+            </div>
+            <div class="payment__charge"> 
+                <div>charges (10%)</div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.charge)}</div>
+                </div>
+            </div>
+            <div class="payment__vat">
+                <div> VAT (7.5%)</div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.vat)}</div>
+                </div>
+            </div>
+            <div class="payment__refund"> 
+                <div>Refundable Caution: </div>
+                <div class="payment__money">
+                    <div>&#8358 </div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.refund)}</div>
+                </div>
+            </div>
+            <div class="payment__amount">
+                <div> Total:  => </div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div class="money__change">${new Intl.NumberFormat().format(paymentDetails.total)}</div>
+                </div>
+            </div>`
+
+            document.querySelector('.payment__discount').value = paymentDetails.discount;
+        }
+
+        const renderpaymentData = () => {
+
+            let paymentDetails = calECtrl.getPayment(document.querySelector('#halnameE')?.value)
+
+            document.querySelector('.payment__details').classList.remove('visible')
+            document.querySelector('.payment__details').classList.add('visible')
+
+            document.querySelector('.payment__details').innerHTML = 
+            `
+            <div class="payment__amount">
+                <div> Amount </div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.amount)}</div>
+                </div>
+            </div>
+            <div class="payment__charge"> 
+                <div>charges (10%)</div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.charge)}</div>
+                </div>
+            </div>
+            <div class="payment__vat">
+                <div> VAT (7.5%)</div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.vat)}</div>
+                </div>
+            </div>
+            <div class="payment__refund"> 
+                <div>Refundable Caution: </div>
+                <div class="payment__money">
+                    <div>&#8358 </div>
+                    <div>${new Intl.NumberFormat().format(paymentDetails.refund)}</div>
+                </div>
+            </div>
+            <div class="payment__amount">
+                <div> Total </div>
+                <div class="payment__money">
+                    <div>&#8358</div>
+                    <div class="money__change">${new Intl.NumberFormat().format(paymentDetails.total)}</div>
+                </div>
+            </div>`
+
+        }
 
         const clickDate = (e) => {
             e.target.classList.toggle('active')
@@ -527,7 +949,8 @@ if (calenderContEdit) {
                     })
                     renderAndAddEvent();
                 } else {
-                    console.log(cb);
+                    calculateDaysBooked(cb);
+                    // let paymentDetails = calECtrl.getPayment(document.querySelector('#halnameE')?.value)
                 }
             })
             
@@ -537,10 +960,12 @@ if (calenderContEdit) {
             // rerender calender date
             renderDaysOfCal(calECtrl.returnDate());
 
+            
+
             let newFilter = Array.from(document.querySelectorAll('.calender__days_edit div')).filter(div => !calECtrl.returnFilterAndStartDate().dbBookedDays.includes(div.id));
 
             // console.log(newFilter);
-
+            // modal.classList.remove('active')
             Array.from(document.querySelectorAll('.calender__days_edit div')).forEach(div => {
                 calECtrl.returnFilterAndStartDate().dbStartDays.forEach(sDay => {
                     if (div.id === sDay) {
@@ -548,11 +973,22 @@ if (calenderContEdit) {
                             calECtrl.getbookedDataOnHover(document.querySelector('#halnameE').value,  calECtrl.convertWordToUtc(e.target.id)).then(resp => {
                                 modal.classList.add('active')
 
-                                    UIEctrl.showModal(resp);
+                                UIEctrl.showModal(resp);
+                            })
+                        })
+                    }
+                })
+            });
 
-                                setTimeout(() => {
-                                    modal.classList.remove('active')
-                                }, 5000);
+
+            Array.from(document.querySelectorAll('.calender__days_edit div')).forEach(div => {
+                calECtrl.returnFilterAndStartDate().dbStartDays.forEach(sDay => {
+                    if (div.id === sDay) {
+                        div.addEventListener('mouseout',(e) => {
+                            calECtrl.getbookedDataOnHover(document.querySelector('#halnameE').value,  calECtrl.convertWordToUtc(e.target.id)).then(resp => {
+                                modal.classList.toggle('active')
+
+                                // UIEctrl.showModal(resp);
                             })
                         })
                     }
@@ -570,17 +1006,32 @@ if (calenderContEdit) {
 
         // function to fetch booked hall
         const fetchbooked = (from, to) => {
-            
+
+            const filled = UIEctrl.getBookedValueE()
+
+            calECtrl.setMultiple(filled)
+
+            calECtrl.filterMultiple();
+
+            calECtrl.setBookingDates([])
+
+            renderpaymentData()
+
             calECtrl.returnBooked(document.querySelector('#halnameE')?.value, from, to).then(result => {
                 calECtrl.clearBooked(Array.from(document.querySelectorAll('.calender__days_edit div')))
-
+                console.log(result.data.data[0]);
                 calECtrl.uploadBooked(result);
 
                 calECtrl.convertBookedArr();
 
-                renderAndAddEvent();            
+                renderAndAddEvent(); 
+                
+                calECtrl.setHall(document.querySelector('#halnameE')?.value)
             })
         }
+
+        // fetch booked hall on change of hall
+        document.querySelector('#halnameE')?.addEventListener('change', () => fetchbooked(calECtrl.getFirstAndLastDay().from, calECtrl.getFirstAndLastDay().to))
 
         // function to render calender
         const renderDaysOfCal = (date, cb) => {
@@ -601,8 +1052,7 @@ if (calenderContEdit) {
 
             
             // pass days
-            calECtrl.setDiv(Array.from(document.querySelectorAll('.calender__days_edit div')))
-            
+            calECtrl.setDiv(Array.from(document.querySelectorAll('.calender__days_edit div')))  
 
         }
 
@@ -643,6 +1093,8 @@ if (calenderContEdit) {
         // add click event to previous button
         calenderLftArr?.addEventListener('click', (e) => {
             e.preventDefault()
+
+            let bookedDate = calECtrl.getBookingDates()
             // get the set date
             var date = calECtrl.returnDate();
 
@@ -665,11 +1117,12 @@ if (calenderContEdit) {
 
             // render calender
             renderDaysOfCal(date);
+
+            calECtrl.setBookingDates(bookedDate)
         }) 
 
         // add submit event 
         document.querySelector('#updateOne')?.addEventListener('click', (e) => {
-            console.log('hello');
             // prevent page reload
             e.preventDefault();
 
@@ -677,7 +1130,6 @@ if (calenderContEdit) {
 
             // get input values
             let bookedData = UIEctrl.getBookedValueE();
-
             // store the booked values
             calECtrl.getbookedData(bookedData, (booked) => {
 
@@ -691,7 +1143,7 @@ if (calenderContEdit) {
                     if (res.status === 201) {
                         UIEctrl.showAlert('success', 'Update successful, redirecting....');
                         window.setTimeout(() => {
-                            location.assign('/bookings');
+                            // location.assign('/bookings');
                         }, 1500);
                     }
                 }).catch(e => {
@@ -710,20 +1162,18 @@ if (calenderContEdit) {
         let month = calECtrl.convertDateToMonth();
 
         UIEctrl.updateHeadOnArrPress(month);
-
         fetchbooked(calECtrl.getFirstAndLastDay().from, calECtrl.getFirstAndLastDay().to);
 
-        // renderDaysOfCal(new Date())
-
         renderAndAddEvent()
-        
-
 
     })(calenderEditController, UIEditController);
 }
 
 
 
+
+
+// create booking page
 if (calenderCont) {
     // calender Controller
     const calenderController = (function(){
@@ -759,98 +1209,112 @@ if (calenderCont) {
                 amount: 200000,
                 serviceCharge: 10,
                 vat: 7.5,
-                refund: 80000
+                refund: 80000,
+                discount: 0
             },
             SulejaGarden: {
                 hallname: 'Suleja Garden',
                 amount: 150000,
                 serviceCharge: 10,
                 vat: 7.5,
-                refund: 35000
+                refund: 35000,
+                discount: 0
             },
             ExecutiveHallConference: {
                 hallname: 'Executive Hall Conference',
                 amount: 1500000,
                 serviceCharge: 10,
                 vat: 7.5,
-                refund: 250000
+                refund: 250000,
+                discount: 0
             },
             ExecutiveLounge: {
                 hallname: 'Executive Lounge',
                 amount: 500000,
                 serviceCharge: 10,
                 vat: 7.5,
-                refund: 250000
+                refund: 250000,
+                discount: 0
             },
             ExecutiveHallWedding: {
                 hallname: 'Executive Hall wedding',
                 amount: 1800000,
                 serviceCharge: 10,
                 vat: 7.5,
-                refund: 250000
+                refund: 250000,
+                discount: 0
             },
             OfficeSpace: {
                 hallname: 'Executive Hall Conference',
                 amount: 120000,
                 serviceCharge: 10,
                 vat: 7.5,
-                refund: 50000
+                refund: 50000,
+                discount: 0
             },
             BenueHall: {
                 hallname: 'Benue Hall',
                 amount: 500000,
                 serviceCharge: 10,
                 vat: 7.5,
-                refund: 80000
+                refund: 80000,
+                discount: 0
             },
             NigerHall: {
                 hallname: 'Niger Hall',
                 amount: 500000,
                 serviceCharge: 10,
                 vat: 7.5,
-                refund: 80000
+                refund: 80000,
+                discount: 0
             },
             BanquetHall: {
                 hallname: 'Banquet Hall',
                 amount: 300000,
                 serviceCharge: 10,
                 vat: 7.5,
-                refund: 100000
+                refund: 100000,
+                discount: 0
             },
             AsoHall: {
                 hallname: 'Aso Hall',
                 amount: 700000,
                 serviceCharge: 10,
                 vat: 7.5,
-                refund: 100000
+                refund: 100000,
+                discount: 0
             },
             ArcadeHall: {
                 hallname: 'Arcade Hall',
                 amount: 250000,
                 serviceCharge: 10,
                 vat: 7.5,
-                refund: 70000
+                refund: 70000,
+                discount: 0
             },
             AfricaHallConference: {
                 hallname: 'Africa Hall/Foyer Conference',
                 amount: 4000000,
                 serviceCharge: 10,
                 vat: 7.5,
-                refund: 440000
+                refund: 440000,
+                discount: 0
             },
             AfricaHallWedding: {
                 hallname: 'Africa Hall Wedding',
                 amount: 5000000,
                 serviceCharge: 10,
                 vat: 7.5,
-                refund: 440000
+                refund: 440000,
+                discount: 0
             },
             AfricaHallGalleria: {
                 hallname: 'Africa Hall Galleria',
                 amount: 200000,
                 serviceCharge: 10,
                 vat: 7.5,
-                refund: 80000
+                refund: 80000,
+                discount: 0
             }
     
         }
@@ -866,20 +1330,24 @@ if (calenderCont) {
                 console.log(daysdiff);
                 let amount; 
                 if (disc !== '') {
-                    amount = (disc/100) * (data.amount * daysdiff)
+                    (daysdiff - 1) > 1 ?
+                    amount = (data.amount * (daysdiff - 1)) - ((disc/100) * (data.amount * (daysdiff - 1))) :
+                    amount = data.amount - ((disc/100) * (data.amount))
                 } else {
                    amount = data.amount * daysdiff;
                 }
 
                 console.log(amount);
+                console.log(data.discount);
                 
                 
                 return {
                     amount,
-                    charge: (10/100) * amount,
-                    vat: (7.5/100) * amount,
+                    charge: (10/100) * data.amount,
+                    vat: (7.5/100) * data.amount,
                     refund: data.refund,
-                    total: amount + ((10/100) * amount) + ((7.5/100) * amount)
+                    total: amount + ((10/100) * data.amount) + ((7.5/100) * data.amount),
+                    discount: data.discount + disc
                 }
             },
 
@@ -910,6 +1378,7 @@ if (calenderCont) {
             calcPayment: function(data) {
                 
                 return {
+                    discount: 0,
                     amount: data.amount,
                     charge: (data.serviceCharge/100) * data.amount,
                     vat: (data.vat/100) * data.amount,
@@ -973,14 +1442,14 @@ if (calenderCont) {
                 }
             },
 
-            submitData: async function () {
+            submitData: async function (options) {
                 try {
                     
                     const res = await axios(
                         {
                             method: 'POST',
                             url: `${location.protocol}//${location.host}/api/v1/bookings/many`,
-                            data: multiple,
+                            data: [...options],
                         },
                         {
                             withCredentials: true,
@@ -1211,6 +1680,7 @@ if (calenderCont) {
                     console.log('entered is two');
                     booked.push({
                         ...data,
+                        discount:+discount,
                         clientPhoneNumber: data.clientTel,
                         bookedFrom: this.convertWordToUtc(bookingDates[0]),
                         bookedTo: this.convertWordToUtc(bookingDates[1])
@@ -1219,6 +1689,7 @@ if (calenderCont) {
                     console.log('entered is one');
                     booked.push({
                         ...data,
+                        discount:+discount,
                         clientPhoneNumber: data.clientTel,
                         bookedFrom: this.convertWordToUtc(bookedID[0]),
                         bookedTo: this.convertWordToUtc(bookedID[0])
@@ -1335,6 +1806,24 @@ if (calenderCont) {
                     bookingDates.push(data)
                 })
                 
+            },
+            updateOneBook: async function (options, id) {
+                try {
+                    const res = await axios(
+                        {
+                            method: 'PATCH',
+                            url: `${location.protocol}//${location.host}/api/v1/bookings/${id}`,
+                            data: { ...options },
+                        },
+                        { withCredentials: true }
+                    );
+                    console.log(res);
+                    if (res.status === 201) {
+                        return res;
+                    }
+                } catch (error) {
+                    console.log('error', 'Please select a date');
+                }
             }
 
 
@@ -1360,9 +1849,12 @@ if (calenderCont) {
             // get input values for submit
             getBookedValue: function () {
                 var a = document.querySelector('.money__change')?.textContent;
-               
                 a=a?.replace(/\,/g,''); 
                 a=parseInt(a,10);
+
+                var paid = document.querySelector('#paidB')?.value;
+                paid === "paid" ? paid = true : paid = false;
+
                 return {
                     clientName: document.querySelector('#clientName')?.value,
                     clientTel: document.querySelector('#clientTel')?.value,
@@ -1371,7 +1863,9 @@ if (calenderCont) {
                     attendance: document.querySelector('#attendance')?.value,
                     event: document.querySelector('#event')?.value,
                     bookedFrom: document.querySelectorAll('.active'),
+                    discount: document.querySelector('.payment__discount')?.value,
                     total: a,
+                    paid
                 }
             },
 
@@ -1413,10 +1907,12 @@ if (calenderCont) {
                 bookedDays = 1
             } else {
                 bookedDays = calCtrl.dateDiff(days[0],days[1])
-                // bookedDays += 1 
+                bookedDays += 1 
             }
 
-            const paymentDetails = calCtrl.updatePayment(calCtrl.getPayment(document.querySelector('#hallname')?.value),(bookedDays + 1), +discountPercentage)
+            const paymentDetails = calCtrl.updatePayment(calCtrl.getPayment(document.querySelector('#hallname')?.value),(bookedDays + 1), +discountPercentage);
+
+            couponInput.value = "";
 
             // let paymentDetails = calCtrl.getPayment(document.querySelector('#hallname')?.value)
 
@@ -1462,6 +1958,8 @@ if (calenderCont) {
                     <div class="money__change">${new Intl.NumberFormat().format(paymentDetails.total)}</div>
                 </div>
             </div>`
+
+            document.querySelector('.payment__discount').value = paymentDetails.discount;
         }
 
         couponBtn.addEventListener('click', applyDiscount)
@@ -1522,7 +2020,7 @@ if (calenderCont) {
                 </div>
             </div>`
 
-
+            document.querySelector('.payment__discount').value = paymentDetails.discount;
         }
 
         const renderpaymentData = () => {
@@ -1863,7 +2361,7 @@ const dayDate = document.querySelector('.calender-body-body');
 
 
 
-// calender page
+// view calender page
 const calenderPageController = (function(){
 
    
@@ -2264,6 +2762,8 @@ var controller = (function(calCtrl, UIctrl) {
 })(calenderPageController, UIPageController);
 
 
+
+// Display booking on hover function
 const hoverDetail = (e) => {
     const id = e.parentElement.id;
     const place = e.textContent;
@@ -2295,7 +2795,7 @@ const hoverDetailR = (e) => {
 
 
 
-// bookings-page-table
+// View bookings-table
 if(document.querySelector('.tab')) {
     // bookings-page-table
     (function () {
@@ -2380,7 +2880,7 @@ if(document.querySelector('.tab')) {
             
             let html = ''
             data.forEach(value => {
-                html += `<tr><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${!value.paid? 'unpaid': 'paid'}</td><td><i onClick="runDelete(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><a onClick="return confirm('are you sure you want to update')" href="/bookings/${value._id}"><i id=${value._id}  class="fa fa-edit" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></a></td></tr>`
+                html += `<tr><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${!value.paid? 'unpaid': 'paid'}</td><td style="white-space: nowrap">&#8358 ${new Intl.NumberFormat().format(value.total)}</td><td>${value.discount}%</td><td><i onClick="runDelete(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><a onClick="return confirm('are you sure you want to update')" href="/bookings/${value._id}"><i id=${value._id}  class="fa fa-edit" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></a></td></tr>`
             })
 
             setValue(html)
@@ -2390,7 +2890,7 @@ if(document.querySelector('.tab')) {
             
             let html = ''
             data.forEach(value => {
-                html += `<tr><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${!value.paid? 'unpaid': 'paid'}</td><td><i onClick="runDelete(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><a onClick="return confirm('are you sure you want to update')" href="/bookings/${value._id}"><i class="fa fa-edit" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></a></td></tr>`
+                html += `<tr><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${!value.paid? 'unpaid': 'paid'}</td><td style="white-space: nowrap">&#8358 ${new Intl.NumberFormat().format(value.total)}</td><td>${value.discount}%</td><td><i onClick="runDelete(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><a onClick="return confirm('are you sure you want to update')" href="/bookings/${value._id}"><i class="fa fa-edit" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></a></td></tr>`
             })
 
             setFilter(html)
@@ -2486,7 +2986,7 @@ if(document.querySelector('.tab')) {
     })();
 }
 
-// bins-page-table
+// View bins-table
 if(document.querySelector('.bin')) {
     
     (function () {
@@ -2554,7 +3054,7 @@ if(document.querySelector('.bin')) {
             
             let html = ''
             data.forEach(value => {
-                html += `<tr class="bin"><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${!value.paid? 'unpaid': 'paid'}</td><td><i onClick="runDeleteP(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><i id=${value._id} onClick="runRestore(this)"  class="fa fa-refresh" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></td></tr>`
+                html += `<tr class="bin"><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${!value.paid? 'unpaid': 'paid'}</td><td style="white-space: nowrap">&#8358 ${new Intl.NumberFormat().format(value.total)}</td><td>${value.discount}%</td><td><i onClick="runDeleteP(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><i id=${value._id} onClick="runRestore(this)"  class="fa fa-refresh" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></td></tr>`
             })
 
             // console.log(html);
@@ -2581,7 +3081,7 @@ if(document.querySelector('.bin')) {
             
             let html = ''
             data.forEach(value => {
-                html += `<tr class="bin"><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${!value.paid? 'unpaid': 'paid'}</td><td><i onClick="runDeleteP(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><i id=${value._id} onClick="runRestore(this)"  class="fa fa-refresh" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></td></tr>`
+                html += `<tr class="bin"><td>${value.clientName}</td><td>${value.clientEmail}</td><td>${value.clientPhoneNumber}</td><td>${value.hallname}</td><td>${value.attendance}</td><td>${value.event ? value.event : 'N/A'}</td><td>${new Date(value.bookedFrom).toDateString()}</td><td>${new Date(value.bookedTo).toDateString()}</td><td>${!value.paid? 'unpaid': 'paid'}</td><td style="white-space: nowrap">&#8358 ${new Intl.NumberFormat().format(value.total)}</td><td>${value.discount}%</td><td><i onClick="runDeleteP(this)" id=${value._id}  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><i id=${value._id} onClick="runRestore(this)"  class="fa fa-refresh" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></td></tr>`
             })
 
             // console.log(html);
@@ -2685,7 +3185,7 @@ if(document.querySelector('.bin')) {
 
 
 
-
+// Delete from table
 const runDelete = (e) => {
     
     if (confirm('Are you sure you want to delete')) {
@@ -2695,6 +3195,8 @@ const runDelete = (e) => {
     }
 }
 
+
+// Delete from Bin
 const runDeleteP = (e) => {
     
     if (confirm('Are you sure you want to delete permanently')) {
@@ -2704,6 +3206,8 @@ const runDeleteP = (e) => {
     }
 }
 
+
+// Restore to table
 const runRestore = (e) => {
     
     if (confirm('Are you sure you want to restore')) {
@@ -2713,6 +3217,7 @@ const runRestore = (e) => {
     }
 }
 
+// Delete single Booking
 const deleteOneBook = async (id) => {
 	try {
 		const res = await axios(
@@ -2736,6 +3241,7 @@ const deleteOneBook = async (id) => {
 };
 
 
+// Delete booking permanently
 const deletePermanently = async (id) => {
 	try {
 		const res = await axios(
@@ -2758,6 +3264,8 @@ const deletePermanently = async (id) => {
 	}
 };
 
+
+// Restore Booking
 const restoreBook = async (id) => {
 	try {
 		const res = await axios(
@@ -2780,11 +3288,15 @@ const restoreBook = async (id) => {
 	}
 };
 
+
+// Hide alert on screen
 const hideAlert = () => {
     const el = document.querySelector('.alert');
     if (el) el.parentElement.removeChild(el);
 }
 
+
+// Show alert on screen
 const showAlert = (type, message, delayed) => {
     hideAlert();
     const markup = `<div class="alert alert__${type}">${message}</div>`;
@@ -2794,7 +3306,7 @@ const showAlert = (type, message, delayed) => {
 }
 
 
-
+// check if discount value is a number
 const isNumber = (e) => {
 
     let inputVal = ''
@@ -2812,6 +3324,23 @@ const isNumber = (e) => {
 
     document.querySelector('.payment__discount').value = '';
     
-    document.querySelector('.payment__discount').value = inputVal;
-    
+    document.querySelector('.payment__discount').value = inputVal;  
 }
+
+const croneJob = async () => {
+    let today = new Date().toISOString()
+
+    const res = await axios(
+        {
+            method: 'DELETE',
+            url: `${location.protocol}//${location.host}/api/v1/bookings/crone/day/${today}`,
+        },
+        {
+            withCredentials: true,
+        }
+    );
+
+}
+
+
+croneJob();

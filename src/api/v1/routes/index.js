@@ -86,6 +86,9 @@ router.get(
 );
 
 router.get('/download', protect, bookingsController.download);
+
+router.delete('/bookings/crone/day/:day', protect, bookingsController.croneDelete);
+
 router
 	.route('/bookings/:id')
 	.get(protect, bookingsController.getSingleBooking)

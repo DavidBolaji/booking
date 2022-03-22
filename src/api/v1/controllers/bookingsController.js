@@ -95,6 +95,7 @@ exports.getAllBookings = async (req, res, next) => {
 };
 
 exports.createBooking = async (req, res, next) => {
+	console.log(req.body);
 	try {
 		if (
 			new Date(req.body.bookedFrom).getTime() >
@@ -112,21 +113,22 @@ exports.createBooking = async (req, res, next) => {
 			bookedFrom: req.body.bookedFrom,
 			bookedTo: req.body.bookedTo,
 			total: req.body.total,
-			paid: req.body.paid
+			paid: req.body.paid,
+			discount:  req.body.discount
 		});
 		if (!newBooking) {
 			return next(new CustomError(400, 'Error processing your request'));
 		}
 		try {
-			const reservationMail = new Email({
-				email: 'info@bookingreservation.com.ng',
-			});
-			await reservationMail.sendReservation(req.body);
-			const confirmationMail = new Email({
-				firstname: req.body.clientName,
-				email: req.body.clientEmail,
-			});
-			await confirmationMail.sendConfirmation();
+			// const reservationMail = new Email({
+			// 	email: 'info@bookingreservation.com.ng',
+			// });
+			// await reservationMail.sendReservation(req.body);
+			// const confirmationMail = new Email({
+			// 	firstname: req.body.clientName,
+			// 	email: req.body.clientEmail,
+			// });
+			// await confirmationMail.sendConfirmation();
 		} catch (error) {
 			console.log(error);
 		}
@@ -147,21 +149,20 @@ exports.multipleBooking = async (req, res, next) => {
 			return next(new CustomError(400, 'Error processing your request'));
 		}
 		try {
-			const reservationMail = new Email({
-				email: 'info@bookingreservation.com.ng',
-			});
-			await reservationMail.sendReservation(req.body);
-			const confirmationMail = new Email({
-				firstname: req.body.clientName,
-				email: req.body.clientEmail,
-			});
-			await confirmationMail.sendConfirmation();
+			// const reservationMail = new Email({
+			// 	email: 'info@bookingreservation.com.ng',
+			// });
+			// await reservationMail.sendReservation(req.body);
+			// const confirmationMail = new Email({
+			// 	firstname: req.body.clientName,
+			// 	email: req.body.clientEmail,
+			// });
+			// await confirmationMail.sendConfirmation();
 		} catch (error) {
 			console.log(error);
 		}
 		return responseHandler(res, 201, { booking: newBooking });
 	} catch (error) {
-		console.log(error);
 		return next(new CustomError(500, 'Something went wrong, try again', error));
 	}
 };
@@ -195,7 +196,7 @@ exports.updateBooking = async (req, res, next) => {
 					bookedFrom: req.body[0].bookedFrom && req.body[0].bookedFrom,
 					bookedTo: req.body[0].bookedTo && req.body[0].bookedTo,
 					total: req.body[0].total,
-					paid: req.body[0].paid === 'unpaid'? false: true,
+					paid: req.body[0].paid,
 				}
 			});
 		if (!updatedBooking) {
@@ -232,6 +233,9 @@ exports.deleteSingleBooking = async (req, res, next) => {
 				attendance: bookBin[0].attendance,
 				bookedFrom: bookBin[0].bookedFrom && bookBin[0].bookedFrom,
 				bookedTo: bookBin[0].bookedTo && bookBin[0].bookedTo,
+				paid: bookBin[0].paid,
+				total: bookBin[0].total,
+				discount: bookBin[0].discount,
 			})
 
 			if (!bin) throw new Error('ERROR')
@@ -378,8 +382,6 @@ exports.getBookedDates = async (req, res, next) => {
 	let prevMonth = dateFrom.setMonth(dateFrom.getMonth() - 1);
 	let nextMonth = dateTo.setMonth(dateTo.getMonth() + 1);
 
-	
-
 	const halls = await Booking.find({hallname, bookedFrom: {$gte: new Date(prevMonth)}, bookedTo: {$lte: new Date(nextMonth)}})
 	responseHandler(res, 200, halls);
 }
@@ -452,6 +454,29 @@ exports.getUnfilteredBookings = async (req, res, next) => {
 	}
 	
 	// responseHandler(res, 200, hall);
+}
+
+
+exports.croneDelete = async (req, res, next) => {
+	const { day } = req.params;
+
+	const hall = await Booking.find({ bookedTo: {$lt : new Date(day)} })
+
+	if (hall) {
+		const bin = await Bin.insertMany(hall)
+
+		if (!bin) throw new Error('ERROR')
+
+		const deleteBook = await Booking.deleteMany({bookedTo: {$lt : new Date(day)}})
+
+		if (!deleteBook) {
+			return next(new CustomError(404, 'Invalid ID or not found'));
+		}
+		return responseHandler(res, 204, null);
+	}
+
+	
+	responseHandler(res, 200, hall);
 }
 
 

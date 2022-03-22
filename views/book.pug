@@ -31,6 +31,11 @@ block content
             option(value="Taraba Hall") Taraba Hall
         label(for='attendance')
           input#attendance.form__input(type='number' name='attendance' placeholder='Enter the event Attendance' min='5' max='3000')
+      .input-group_money 
+        label(for='paid')
+          select#paidB(name="paid")
+            option(value="unpaid") unpaid 
+            option(value="paid") paid 
       .payment__details 
         .payment__amount Amount:$5000
         .payment__charge charge: $500(10%)

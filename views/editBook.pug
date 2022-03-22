@@ -6,24 +6,104 @@ block content
     form.booking-form#edit-form
       .input-group
         label.form__label(for='clientName')
-          input#clientNameE.form__input(type='text' name='clientName' autocomplete='given-name' placeholder="Enter the Client's name" value=`${booking.clientName}` readonly)
+          input#clientNameE.form__input(type='text' name='clientName' autocomplete='given-name' placeholder="Enter the Client's name" value=`${booking.clientName}`)
         label.form__label(for='clientTel')
-          input#clientTelE.form__input(type='tel' name='clientTel' autocomplete='tel' placeholder="Enter the Client's Phone Number" value=`${booking.clientPhoneNumber}` readonly)
+          input#clientTelE.form__input(type='tel' name='clientTel' autocomplete='tel' placeholder="Enter the Client's Phone Number" value=`${booking.clientPhoneNumber}`)
       label.form__label(for='email')
-        input#emailE.form__input(type='email' name='clientEmail' autocomplete='email' placeholder="Enter the Client's email" value=`${booking.clientEmail}` readonly)
+        input#emailE.form__input(type='email' name='clientEmail' autocomplete='email' placeholder="Enter the Client's email" value=`${booking.clientEmail}`)
       .input-group
         label(for='hallname')
-          input#halnameE.form__input(type="text", name="hallname" readonly value=`${booking.hallname}`)
+          select#halnameE.form__input(name='hallname', value=`${booking.hallname}` type="text")
+            if booking.hallname === "Africa Hall Conference"
+              option(value="Africa Hall Conference" selected) Africa Hall Conference
+            else
+              option(value="Africa Hall Conference") Africa Hall Conference
+
+            if booking.hallname === "Africa Hall Wedding"
+              option(value="Africa Hall Wedding" selected) Africa Hall Wedding
+            else
+              option(value="Africa Hall Wedding") Africa Hall Wedding
+
+            if booking.hallname === "Africa Hall Galleria"
+              option(value="Africa Hall Galleria" selected) Africa Hall Galleria
+            else
+              option(value="Africa Hall Galleria") Africa Hall Galleria
+
+            if booking.hallname === "Arcade Hall"
+              option(value="Arcade Hall" selected) Arcade Hall
+            else
+              option(value="Arcade Hall") Arcade Hall
+
+            if booking.hallname === "Aso Hall"
+              option(value="Aso Hall" selected) Aso Hall
+            else
+              option(value="Aso Hall") Aso Hall
+
+            if booking.hallname === "Banquet Hall"
+              option(value="Banquet Hall" selected) Banquet Hall
+            else
+              option(value="Banquet Hall") Banquet Hall
+
+            if booking.hallname === "Benue Hall"
+              option(value="Benue Hall" selected) Benue Hall
+            else
+              option(value="Benue Hall") Benue Hall
+            
+            if booking.hallname === "Executive Hall Conference"
+              option(value="Executive Hall Conference" selected) Executive Hall Conference
+            else
+              option(value="Executive Hall Conference") Executive Hall Conference
+
+            if booking.hallname === "Executive Hall Wedding"
+              option(value="Executive Hall Wedding" selected) Executive Hall Wedding
+            else
+              option(value="Executive Hall Wedding") Executive Hall Wedding
+
+            if booking.hallname === "Executive Lounge"
+              option(value="Executive Lounge" selected) Executive Lounge
+            else
+              option(value="Executive Lounge") Executive Lounge
+
+            if booking.hallname === "Niger Hall"
+              option(value="Niger Hall" selected) Niger Hall
+            else
+              option(value="Niger Hall") Niger Hall
+            
+            if booking.hallname === "Office Space"
+              option(value="Office Space" selected) Office Space
+            else
+              option(value="Office Space") Office Space
+
+            if booking.hallname === "Suleja Garden"
+              option(value="Suleja Garden" selected) Suleja Garden
+            else
+              option(value="Suleja Garden") Suleja Garden
+
+            if booking.hallname === "Taraba Hall"
+              option(value="Taraba Hall" selected) Taraba Hall
+            else
+              option(value="Taraba Hall") Taraba Hall
         label(for='attendance')
           input#attendanceE.form__input(type='number' name='attendance' placeholder='Enter the event Attendance' min='5' max='3000' value=`${booking.attendance}`)
       .input-group_money
         label(for='total')
           span &#8358
-          input.total(type="text", name="total" readonly value=`${new Intl.NumberFormat().format(booking.total)}`)
-        label(for='paid')
-          select#paid(name="paid")
-            option(value="unpaid") unpaid 
-            option(value="paid") paid  
+          input.total(type="text", name="total" value=`${new Intl.NumberFormat().format(booking.total)}`)
+        label(for='paid') 
+          if booking.paid
+            select#paid(name="paid")
+              option(value="paid" selected) paid
+              option(value="unpaid") unpaid
+          else
+            select#paid(name="paid")
+              option(value="paid") paid 
+              option(value="unpaid" selected) unpaid 
+      .payment__details 
+        .payment__amount Amount:$5000
+        .payment__charge charge: $500(10%)
+        .payment__vat VAT: $375(7.5%)
+        .payment__refund Refundable Caution: $440 000
+        .payment__total Total: $5875 
       label.form__label(for='event')
         textarea#eventE.form__textarea(name='event' placeholder='Event Description' maxlength='500' minlength='5') #{booking.event}
       div.calender__container_edit
@@ -45,8 +125,12 @@ block content
             div Fri
             div Sat
           div.calender__days_edit
-      .input-group
-        label.form__label
-          button#updateOne.form__input.bg-green UPDATE
-        label.form__label
-          button#deleteOne.form__input.bg-red DELETE
+      form
+        .coupon 
+          input.payment__discount(placeholder="Enter Discount" oninput="isNumber(this.value)")
+          button(type="submit" class="coupon__input") Apply
+        .input-group
+          label.form__label
+            button#updateOne.form__input.bg-green UPDATE
+          label.form__label
+            button#deleteOne.form__input.bg-red DELETE
