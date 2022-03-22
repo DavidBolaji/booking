@@ -3330,7 +3330,7 @@ const isNumber = (e) => {
 const croneJob = async () => {
     let today = new Date()
 
-    let lastDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString()
+    let lastDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString();
 
     
 
