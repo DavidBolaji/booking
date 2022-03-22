@@ -3328,12 +3328,16 @@ const isNumber = (e) => {
 }
 
 const croneJob = async () => {
-    let today = new Date().toISOString()
+    let today = new Date()
+
+    let lastDay = new Date(today.getFullYear(), today.getMonth()+1, 1).toISOString()
+
+    
 
     const res = await axios(
         {
             method: 'DELETE',
-            url: `${location.protocol}//${location.host}/api/v1/bookings/crone/day/${today}`,
+            url: `${location.protocol}//${location.host}/api/v1/bookings/crone/day/${lastDay}`,
         },
         {
             withCredentials: true,
