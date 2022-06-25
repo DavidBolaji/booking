@@ -40,7 +40,7 @@ block content
              
               .tot
                 .tot_cur Total: &#8358 
-                .tot_amount #{new Intl.NumberFormat().format(booking.total)} #{booking.paid ? 'paid' : 'unpaid'}
+                .tot_amount #{new Intl.NumberFormat().format(booking.total)} #{booking.paid === "paid" ? 'Paid' : booking.paid === "deposit" ? 'Deposit' : "Unpaid" }
               p
                 span.card__footer-value From: 
                 span.card__footer-text #{booking.bookedFrom.toDateString()}

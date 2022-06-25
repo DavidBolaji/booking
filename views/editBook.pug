@@ -90,14 +90,21 @@ block content
           span &#8358
           input.total(type="text", name="total" value=`${new Intl.NumberFormat().format(booking.total)}`)
         label(for='paid') 
-          if booking.paid
+          if booking.paid === "paid"
             select#paid(name="paid")
-              option(value="paid" selected) paid
-              option(value="unpaid") unpaid
+              option(value="unpaid") Unpaid 
+              option(value="deposit") Deposit 
+              option(value="paid" selected) Fully Paid 
+          else if booking.paid === "deposit" 
+            select#paid(name="paid")
+              option(value="unpaid") Unpaid 
+              option(value="deposit" selected) Deposit 
+              option(value="paid") Fully Paid 
           else
             select#paid(name="paid")
-              option(value="paid") paid 
-              option(value="unpaid" selected) unpaid 
+              option(value="unpaid" selected) Unpaid 
+              option(value="deposit") Deposit 
+              option(value="paid") Fully Paid 
       .payment__details 
         .payment__amount Amount:$5000
         .payment__charge charge: $500(10%)

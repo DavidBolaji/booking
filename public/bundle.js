@@ -8625,61 +8625,61 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var hideAlert = function hideAlert() {
-  var el = document.querySelector('.alert');
+  var el = document.querySelector(".alert");
   if (el) el.parentElement.removeChild(el);
 };
 
 var showAlert = function showAlert(type, message, delayed) {
   hideAlert();
   var markup = "<div class=\"alert alert__".concat(type, "\">").concat(message, "</div>");
-  document.querySelector('body').insertAdjacentHTML('afterbegin', markup);
+  document.querySelector("body").insertAdjacentHTML("afterbegin", markup);
   if (delayed === true) window.setTimeout(hideAlert, 25000);
   window.setTimeout(hideAlert, 3000);
 }; // DOM QUERIES
 
 
-var menubtn = document.querySelector('.menu-btn');
-var loginForm = document.querySelector('#login-form');
-var registerForm = document.querySelector('#register-form');
-var logout = document.querySelector('#logout');
-var paginationList = document.querySelector('.pagination__list'); // const bookingForm = document.querySelector('#reservation-form');
+var menubtn = document.querySelector(".menu-btn");
+var loginForm = document.querySelector("#login-form");
+var registerForm = document.querySelector("#register-form");
+var logout = document.querySelector("#logout");
+var paginationList = document.querySelector(".pagination__list"); // const bookingForm = document.querySelector('#reservation-form');
 
-var searchBar = document.querySelector('#search-bookings-form');
-var getAvlbBtn = document.querySelector('#av-btn');
-var availabilityForm = document.querySelector('#availability-form');
-var downloadBtn = document.querySelector('#export');
-var deleteBtn = document.querySelector('#deleteOne'); // const updateBtn = document.querySelector('#updateOne');
+var searchBar = document.querySelector("#search-bookings-form");
+var getAvlbBtn = document.querySelector("#av-btn");
+var availabilityForm = document.querySelector("#availability-form");
+var downloadBtn = document.querySelector("#export");
+var deleteBtn = document.querySelector("#deleteOne"); // const updateBtn = document.querySelector('#updateOne');
 // DOM MANIPULATION
 // MENU MARKUP
 
 if (menubtn) {
-  menubtn.addEventListener('click', function () {
-    toggler('.menu', 'show');
-    toggler('.menu-btn', 'close');
+  menubtn.addEventListener("click", function () {
+    toggler(".menu", "show");
+    toggler(".menu-btn", "close");
   });
 }
 
 if (downloadBtn) {
-  downloadBtn.addEventListener('click', function () {
+  downloadBtn.addEventListener("click", function () {
     downloadCSV();
   });
 }
 
 if (deleteBtn) {
   var id = window.location.href.split(/\//)[4];
-  deleteBtn.addEventListener('click', function (ev) {
+  deleteBtn.addEventListener("click", function (ev) {
     ev.preventDefault();
     deleteOneBook(id);
   });
 }
 
 if (loginForm) {
-  loginForm.addEventListener('submit', function (e) {
+  loginForm.addEventListener("submit", function (e) {
     var password = document.querySelector('input[name="password"]').value;
     var email = document.querySelector('input[name="email"]').value;
 
     if (password.length < 8) {
-      showAlert('error', 'Invalid Password Length');
+      showAlert("error", "Invalid Password Length");
     }
 
     e.preventDefault();
@@ -8688,7 +8688,7 @@ if (loginForm) {
 }
 
 if (registerForm) {
-  registerForm.addEventListener('submit', function (e) {
+  registerForm.addEventListener("submit", function (e) {
     var firstname = document.querySelector('input[name="firstname"]').value;
     var lastname = document.querySelector('input[name="lastname"]').value;
     var password = document.querySelector('input[name="password"]').value;
@@ -8696,17 +8696,17 @@ if (registerForm) {
     var email = document.querySelector('input[name="email"]').value;
 
     if (password !== confirmPassword) {
-      showAlert('error', 'Passwords do not match');
+      showAlert("error", "Passwords do not match");
     }
 
     var reg = /^[a-zA-Z]*$/;
 
     if (reg.test(firstname) === false) {
-      showAlert('error', 'Firstname must only be letters');
+      showAlert("error", "Firstname must only be letters");
     }
 
     if (reg.test(lastname) === false) {
-      showAlert('error', 'Lastname must only be letters');
+      showAlert("error", "Lastname must only be letters");
     }
 
     e.preventDefault();
@@ -8715,13 +8715,13 @@ if (registerForm) {
 }
 
 if (logout) {
-  logout.addEventListener('click', function () {
+  logout.addEventListener("click", function () {
     logoutFunction();
   });
 }
 
 if (searchBar) {
-  searchBar.addEventListener('submit', function (e) {
+  searchBar.addEventListener("submit", function (e) {
     e.preventDefault();
     var searchParam = document.querySelector('input[name="search-input"]').value;
     var input = capitalizeLet(searchParam); // return;
@@ -8731,7 +8731,7 @@ if (searchBar) {
 }
 
 if (availabilityForm) {
-  availabilityForm.addEventListener('submit', function (e) {
+  availabilityForm.addEventListener("submit", function (e) {
     var from = document.querySelector('input[name="from"]').value;
     var to = document.querySelector('input[name="to"]').value;
     var hallname = document.querySelector('select[name="hallname"]').value;
@@ -8744,17 +8744,17 @@ if (availabilityForm) {
         var trans = dates.map(function (el) {
           return "".concat(new Date(el[0]).toDateString(), " - ").concat(new Date(el[1]).toDateString());
         });
-        var str = '<li>';
+        var str = "<li>";
         trans.forEach(function (date) {
           str += "<p class='para'>Available From: <span>".concat(date, "</span> </p>");
         });
-        str += '</li>';
-        var results = document.querySelector('.results-ul');
+        str += "</li>";
+        var results = document.querySelector(".results-ul");
         return results.innerHTML = str;
       } else {
-        showAlert('error', 'No dates available');
-        var _str = '<li>No dates available </li>';
-        return document.querySelector('.results-ul').innerHTML = _str;
+        showAlert("error", "No dates available");
+        var _str = "<li>No dates available </li>";
+        return document.querySelector(".results-ul").innerHTML = _str;
       }
     });
   });
@@ -8766,8 +8766,8 @@ var toggler = function toggler(selector, className) {
 };
 
 if (getAvlbBtn) {
-  getAvlbBtn.addEventListener('click', function () {
-    return toggler('.hidden', 'show');
+  getAvlbBtn.addEventListener("click", function () {
+    return toggler(".hidden", "show");
   });
 }
 
@@ -8788,7 +8788,7 @@ function () {
           case 0:
             _context.next = 2;
             return (0, _axios.default)({
-              method: 'GET',
+              method: "GET",
               url: url
             }, {
               withCredentials: true
@@ -8839,7 +8839,7 @@ function () {
             _context2.prev = 0;
             _context2.next = 3;
             return (0, _axios.default)({
-              method: 'POST',
+              method: "POST",
               url: "".concat(location.protocol, "//").concat(location.host, "/api/v1/auth/login"),
               data: {
                 email: email,
@@ -8857,14 +8857,14 @@ function () {
               break;
             }
 
-            console.log(res.status);
-            showAlert('success', 'Login successful, redirecting...');
-            location.assign('/');
+            localStorage.setItem("user_delete_id", res.data.id);
+            showAlert("success", "Login successful, redirecting...");
+            location.assign("/");
             _context2.next = 11;
             break;
 
           case 10:
-            return _context2.abrupt("return", showAlert('error', 'Incorrect email or password'));
+            return _context2.abrupt("return", showAlert("error", "Incorrect email or password"));
 
           case 11:
             _context2.next = 16;
@@ -8873,7 +8873,7 @@ function () {
           case 13:
             _context2.prev = 13;
             _context2.t0 = _context2["catch"](0);
-            showAlert('error', _context2.t0.response.data.error);
+            showAlert("error", _context2.t0.response.data.error);
 
           case 16:
           case "end":
@@ -8902,7 +8902,7 @@ function () {
             _context3.prev = 0;
             _context3.next = 3;
             return (0, _axios.default)({
-              method: 'POST',
+              method: "POST",
               url: "".concat(location.protocol, "//").concat(location.host, "/api/v1/auth/signup"),
               data: {
                 firstname: firstname,
@@ -8919,8 +8919,8 @@ function () {
             res = _context3.sent;
 
             if (res.status === 201) {
-              showAlert('success', 'Registeration successful, redirecting...');
-              location.assign('/login');
+              showAlert("success", "Registeration successful, redirecting...");
+              location.assign("/login");
             }
 
             _context3.next = 10;
@@ -8929,7 +8929,7 @@ function () {
           case 7:
             _context3.prev = 7;
             _context3.t0 = _context3["catch"](0);
-            showAlert('error', _context3.t0.response.data.error);
+            showAlert("error", _context3.t0.response.data.error);
 
           case 10:
           case "end":
@@ -8958,7 +8958,7 @@ function () {
             _context4.prev = 0;
             _context4.next = 3;
             return (0, _axios.default)({
-              method: 'POST',
+              method: "POST",
               url: "".concat(location.protocol, "//").concat(location.host, "/api/v1/auth/logout")
             });
 
@@ -8966,9 +8966,10 @@ function () {
             res = _context4.sent;
 
             if (res.status === 204) {
-              showAlert('success', 'Logout successful, redirecting...');
+              localStorage.clear();
+              showAlert("success", "Logout successful, redirecting...");
               window.setTimeout(function () {
-                location.assign('/login');
+                location.assign("/login");
               }, 1000);
             }
 
@@ -8978,7 +8979,7 @@ function () {
           case 7:
             _context4.prev = 7;
             _context4.t0 = _context4["catch"](0);
-            showAlert('error', _context4.t0.response.data.error);
+            showAlert("error", _context4.t0.response.data.error);
 
           case 10:
           case "end":
@@ -9017,10 +9018,10 @@ function _createOneBook() {
         switch (_context9.prev = _context9.next) {
           case 0:
             _context9.prev = 0;
-            showAlert('success', 'Reservation processing, please wait.... ', true);
+            showAlert("success", "Reservation processing, please wait.... ", true);
             _context9.next = 4;
             return (0, _axios.default)({
-              method: 'POST',
+              method: "POST",
               url: "".concat(location.protocol, "//").concat(location.host, "/api/v1/bookings"),
               data: _objectSpread({}, options)
             }, {
@@ -9032,9 +9033,9 @@ function _createOneBook() {
             console.log(res);
 
             if (res.status === 201) {
-              showAlert('success', 'Booking successful');
+              showAlert("success", "Booking successful");
               window.setTimeout(function () {
-                location.assign('/bookings');
+                location.assign("/bookings");
               }, 1500);
             }
 
@@ -9047,9 +9048,9 @@ function _createOneBook() {
             console.log(_context9.t0);
 
             if (_context9.t0.response.status === 11000) {
-              showAlert('error', _context9.t0.response.data.error);
+              showAlert("error", _context9.t0.response.data.error);
             } else {
-              showAlert('error', _context9.t0.response.data.error);
+              showAlert("error", _context9.t0.response.data.error);
             }
 
           case 13:
@@ -9064,10 +9065,10 @@ function _createOneBook() {
 
 var searchByHallname = function searchByHallname(input) {
   try {
-    showAlert('success', 'Redirecting...');
+    showAlert("success", "Redirecting...");
     location.assign("/bookings?hallname=".concat(input));
   } catch (error) {
-    showAlert('error', 'Invalid input!');
+    showAlert("error", "Invalid input!");
   }
 };
 
@@ -9085,7 +9086,7 @@ function () {
             _context5.prev = 0;
             _context5.next = 3;
             return (0, _axios.default)({
-              method: 'GET',
+              method: "GET",
               url: "".concat(location.protocol, "//").concat(location.host, "/api/v1/bookings/getavailability/halls/").concat(hallname, "/from/").concat(from, "/to/").concat(to)
             }, {
               withCredentials: true
@@ -9100,7 +9101,7 @@ function () {
             _context5.prev = 8;
             _context5.t0 = _context5["catch"](0);
             console.log(_context5.t0);
-            showAlert('error', _context5.t0.response.data.error);
+            showAlert("error", _context5.t0.response.data.error);
 
           case 12:
           case "end":
@@ -9129,7 +9130,7 @@ function () {
             _context6.prev = 0;
             _context6.next = 3;
             return (0, _axios.default)({
-              method: 'GET',
+              method: "GET",
               url: "".concat(location.protocol, "//").concat(location.host, "/api/v1/download")
             });
 
@@ -9137,7 +9138,7 @@ function () {
             res = _context6.sent;
 
             if (res.status == 200) {
-              window.open('/bookings.csv');
+              window.open("/bookings.csv");
             }
 
             _context6.next = 10;
@@ -9146,7 +9147,7 @@ function () {
           case 7:
             _context6.prev = 7;
             _context6.t0 = _context6["catch"](0);
-            showAlert('error', 'File not downloaded');
+            showAlert("error", "File not downloaded");
 
           case 10:
           case "end":
@@ -9175,7 +9176,7 @@ function () {
             _context7.prev = 0;
             _context7.next = 3;
             return (0, _axios.default)({
-              method: 'DELETE',
+              method: "DELETE",
               url: "".concat(location.protocol, "//").concat(location.host, "/api/v1/bookings/").concat(id)
             }, {
               withCredentials: true
@@ -9185,9 +9186,9 @@ function () {
             res = _context7.sent;
 
             if (res.status === 204) {
-              showAlert('success', 'Reservation Deleted, redirecting.... ');
+              showAlert("success", "Reservation Deleted, redirecting.... ");
               window.setTimeout(function () {
-                location.assign('/bookings');
+                location.assign("/bookings");
               }, 1000);
             }
 
@@ -9197,7 +9198,7 @@ function () {
           case 7:
             _context7.prev = 7;
             _context7.t0 = _context7["catch"](0);
-            showAlert('error', _context7.t0.response.data.error);
+            showAlert("error", _context7.t0.response.data.error);
 
           case 10:
           case "end":
@@ -9226,7 +9227,7 @@ function () {
             _context8.prev = 0;
             _context8.next = 3;
             return (0, _axios.default)({
-              method: 'PATCH',
+              method: "PATCH",
               url: "".concat(location.protocol, "//").concat(location.host, "/api/v1/bookings/").concat(id),
               data: _objectSpread({}, options)
             }, {
@@ -9237,9 +9238,9 @@ function () {
             res = _context8.sent;
 
             if (res.status === 201) {
-              showAlert('success', 'Update successful, redirecting....');
+              showAlert("success", "Update successful, redirecting....");
               window.setTimeout(function () {
-                location.assign('/bookings');
+                location.assign("/bookings");
               }, 1000);
             }
 
@@ -9249,7 +9250,7 @@ function () {
           case 7:
             _context8.prev = 7;
             _context8.t0 = _context8["catch"](0);
-            showAlert('error', _context8.t0.response.data.error);
+            showAlert("error", _context8.t0.response.data.error);
 
           case 10:
           case "end":
@@ -9265,9 +9266,212 @@ function () {
 }();
 
 function capitalizeLet(str) {
-  return str.split(' ').map(function (el) {
+  return str.split(" ").map(function (el) {
     return el[0].toUpperCase() + el.substring(1).toLowerCase();
-  }).join(' ');
+  }).join(" ");
 }
-},{"core-js/modules/es6.array.copy-within":"../../node_modules/core-js/modules/es6.array.copy-within.js","core-js/modules/es6.array.fill":"../../node_modules/core-js/modules/es6.array.fill.js","core-js/modules/es6.array.find":"../../node_modules/core-js/modules/es6.array.find.js","core-js/modules/es6.array.find-index":"../../node_modules/core-js/modules/es6.array.find-index.js","core-js/modules/es6.array.from":"../../node_modules/core-js/modules/es6.array.from.js","core-js/modules/es7.array.includes":"../../node_modules/core-js/modules/es7.array.includes.js","core-js/modules/es6.array.iterator":"../../node_modules/core-js/modules/es6.array.iterator.js","core-js/modules/es6.array.of":"../../node_modules/core-js/modules/es6.array.of.js","core-js/modules/es6.array.sort":"../../node_modules/core-js/modules/es6.array.sort.js","core-js/modules/es6.array.species":"../../node_modules/core-js/modules/es6.array.species.js","core-js/modules/es6.date.to-primitive":"../../node_modules/core-js/modules/es6.date.to-primitive.js","core-js/modules/es6.function.has-instance":"../../node_modules/core-js/modules/es6.function.has-instance.js","core-js/modules/es6.function.name":"../../node_modules/core-js/modules/es6.function.name.js","core-js/modules/es6.map":"../../node_modules/core-js/modules/es6.map.js","core-js/modules/es6.math.acosh":"../../node_modules/core-js/modules/es6.math.acosh.js","core-js/modules/es6.math.asinh":"../../node_modules/core-js/modules/es6.math.asinh.js","core-js/modules/es6.math.atanh":"../../node_modules/core-js/modules/es6.math.atanh.js","core-js/modules/es6.math.cbrt":"../../node_modules/core-js/modules/es6.math.cbrt.js","core-js/modules/es6.math.clz32":"../../node_modules/core-js/modules/es6.math.clz32.js","core-js/modules/es6.math.cosh":"../../node_modules/core-js/modules/es6.math.cosh.js","core-js/modules/es6.math.expm1":"../../node_modules/core-js/modules/es6.math.expm1.js","core-js/modules/es6.math.fround":"../../node_modules/core-js/modules/es6.math.fround.js","core-js/modules/es6.math.hypot":"../../node_modules/core-js/modules/es6.math.hypot.js","core-js/modules/es6.math.imul":"../../node_modules/core-js/modules/es6.math.imul.js","core-js/modules/es6.math.log1p":"../../node_modules/core-js/modules/es6.math.log1p.js","core-js/modules/es6.math.log10":"../../node_modules/core-js/modules/es6.math.log10.js","core-js/modules/es6.math.log2":"../../node_modules/core-js/modules/es6.math.log2.js","core-js/modules/es6.math.sign":"../../node_modules/core-js/modules/es6.math.sign.js","core-js/modules/es6.math.sinh":"../../node_modules/core-js/modules/es6.math.sinh.js","core-js/modules/es6.math.tanh":"../../node_modules/core-js/modules/es6.math.tanh.js","core-js/modules/es6.math.trunc":"../../node_modules/core-js/modules/es6.math.trunc.js","core-js/modules/es6.number.constructor":"../../node_modules/core-js/modules/es6.number.constructor.js","core-js/modules/es6.number.epsilon":"../../node_modules/core-js/modules/es6.number.epsilon.js","core-js/modules/es6.number.is-finite":"../../node_modules/core-js/modules/es6.number.is-finite.js","core-js/modules/es6.number.is-integer":"../../node_modules/core-js/modules/es6.number.is-integer.js","core-js/modules/es6.number.is-nan":"../../node_modules/core-js/modules/es6.number.is-nan.js","core-js/modules/es6.number.is-safe-integer":"../../node_modules/core-js/modules/es6.number.is-safe-integer.js","core-js/modules/es6.number.max-safe-integer":"../../node_modules/core-js/modules/es6.number.max-safe-integer.js","core-js/modules/es6.number.min-safe-integer":"../../node_modules/core-js/modules/es6.number.min-safe-integer.js","core-js/modules/es6.number.parse-float":"../../node_modules/core-js/modules/es6.number.parse-float.js","core-js/modules/es6.number.parse-int":"../../node_modules/core-js/modules/es6.number.parse-int.js","core-js/modules/es6.object.assign":"../../node_modules/core-js/modules/es6.object.assign.js","core-js/modules/es7.object.define-getter":"../../node_modules/core-js/modules/es7.object.define-getter.js","core-js/modules/es7.object.define-setter":"../../node_modules/core-js/modules/es7.object.define-setter.js","core-js/modules/es7.object.entries":"../../node_modules/core-js/modules/es7.object.entries.js","core-js/modules/es6.object.freeze":"../../node_modules/core-js/modules/es6.object.freeze.js","core-js/modules/es6.object.get-own-property-descriptor":"../../node_modules/core-js/modules/es6.object.get-own-property-descriptor.js","core-js/modules/es7.object.get-own-property-descriptors":"../../node_modules/core-js/modules/es7.object.get-own-property-descriptors.js","core-js/modules/es6.object.get-own-property-names":"../../node_modules/core-js/modules/es6.object.get-own-property-names.js","core-js/modules/es6.object.get-prototype-of":"../../node_modules/core-js/modules/es6.object.get-prototype-of.js","core-js/modules/es7.object.lookup-getter":"../../node_modules/core-js/modules/es7.object.lookup-getter.js","core-js/modules/es7.object.lookup-setter":"../../node_modules/core-js/modules/es7.object.lookup-setter.js","core-js/modules/es6.object.prevent-extensions":"../../node_modules/core-js/modules/es6.object.prevent-extensions.js","core-js/modules/es6.object.is":"../../node_modules/core-js/modules/es6.object.is.js","core-js/modules/es6.object.is-frozen":"../../node_modules/core-js/modules/es6.object.is-frozen.js","core-js/modules/es6.object.is-sealed":"../../node_modules/core-js/modules/es6.object.is-sealed.js","core-js/modules/es6.object.is-extensible":"../../node_modules/core-js/modules/es6.object.is-extensible.js","core-js/modules/es6.object.keys":"../../node_modules/core-js/modules/es6.object.keys.js","core-js/modules/es6.object.seal":"../../node_modules/core-js/modules/es6.object.seal.js","core-js/modules/es7.object.values":"../../node_modules/core-js/modules/es7.object.values.js","core-js/modules/es6.promise":"../../node_modules/core-js/modules/es6.promise.js","core-js/modules/es7.promise.finally":"../../node_modules/core-js/modules/es7.promise.finally.js","core-js/modules/es6.reflect.apply":"../../node_modules/core-js/modules/es6.reflect.apply.js","core-js/modules/es6.reflect.construct":"../../node_modules/core-js/modules/es6.reflect.construct.js","core-js/modules/es6.reflect.define-property":"../../node_modules/core-js/modules/es6.reflect.define-property.js","core-js/modules/es6.reflect.delete-property":"../../node_modules/core-js/modules/es6.reflect.delete-property.js","core-js/modules/es6.reflect.get":"../../node_modules/core-js/modules/es6.reflect.get.js","core-js/modules/es6.reflect.get-own-property-descriptor":"../../node_modules/core-js/modules/es6.reflect.get-own-property-descriptor.js","core-js/modules/es6.reflect.get-prototype-of":"../../node_modules/core-js/modules/es6.reflect.get-prototype-of.js","core-js/modules/es6.reflect.has":"../../node_modules/core-js/modules/es6.reflect.has.js","core-js/modules/es6.reflect.is-extensible":"../../node_modules/core-js/modules/es6.reflect.is-extensible.js","core-js/modules/es6.reflect.own-keys":"../../node_modules/core-js/modules/es6.reflect.own-keys.js","core-js/modules/es6.reflect.prevent-extensions":"../../node_modules/core-js/modules/es6.reflect.prevent-extensions.js","core-js/modules/es6.reflect.set":"../../node_modules/core-js/modules/es6.reflect.set.js","core-js/modules/es6.reflect.set-prototype-of":"../../node_modules/core-js/modules/es6.reflect.set-prototype-of.js","core-js/modules/es6.regexp.constructor":"../../node_modules/core-js/modules/es6.regexp.constructor.js","core-js/modules/es6.regexp.flags":"../../node_modules/core-js/modules/es6.regexp.flags.js","core-js/modules/es6.regexp.match":"../../node_modules/core-js/modules/es6.regexp.match.js","core-js/modules/es6.regexp.replace":"../../node_modules/core-js/modules/es6.regexp.replace.js","core-js/modules/es6.regexp.split":"../../node_modules/core-js/modules/es6.regexp.split.js","core-js/modules/es6.regexp.search":"../../node_modules/core-js/modules/es6.regexp.search.js","core-js/modules/es6.regexp.to-string":"../../node_modules/core-js/modules/es6.regexp.to-string.js","core-js/modules/es6.set":"../../node_modules/core-js/modules/es6.set.js","core-js/modules/es6.symbol":"../../node_modules/core-js/modules/es6.symbol.js","core-js/modules/es7.symbol.async-iterator":"../../node_modules/core-js/modules/es7.symbol.async-iterator.js","core-js/modules/es6.string.anchor":"../../node_modules/core-js/modules/es6.string.anchor.js","core-js/modules/es6.string.big":"../../node_modules/core-js/modules/es6.string.big.js","core-js/modules/es6.string.blink":"../../node_modules/core-js/modules/es6.string.blink.js","core-js/modules/es6.string.bold":"../../node_modules/core-js/modules/es6.string.bold.js","core-js/modules/es6.string.code-point-at":"../../node_modules/core-js/modules/es6.string.code-point-at.js","core-js/modules/es6.string.ends-with":"../../node_modules/core-js/modules/es6.string.ends-with.js","core-js/modules/es6.string.fixed":"../../node_modules/core-js/modules/es6.string.fixed.js","core-js/modules/es6.string.fontcolor":"../../node_modules/core-js/modules/es6.string.fontcolor.js","core-js/modules/es6.string.fontsize":"../../node_modules/core-js/modules/es6.string.fontsize.js","core-js/modules/es6.string.from-code-point":"../../node_modules/core-js/modules/es6.string.from-code-point.js","core-js/modules/es6.string.includes":"../../node_modules/core-js/modules/es6.string.includes.js","core-js/modules/es6.string.italics":"../../node_modules/core-js/modules/es6.string.italics.js","core-js/modules/es6.string.iterator":"../../node_modules/core-js/modules/es6.string.iterator.js","core-js/modules/es6.string.link":"../../node_modules/core-js/modules/es6.string.link.js","core-js/modules/es7.string.pad-start":"../../node_modules/core-js/modules/es7.string.pad-start.js","core-js/modules/es7.string.pad-end":"../../node_modules/core-js/modules/es7.string.pad-end.js","core-js/modules/es6.string.raw":"../../node_modules/core-js/modules/es6.string.raw.js","core-js/modules/es6.string.repeat":"../../node_modules/core-js/modules/es6.string.repeat.js","core-js/modules/es6.string.small":"../../node_modules/core-js/modules/es6.string.small.js","core-js/modules/es6.string.starts-with":"../../node_modules/core-js/modules/es6.string.starts-with.js","core-js/modules/es6.string.strike":"../../node_modules/core-js/modules/es6.string.strike.js","core-js/modules/es6.string.sub":"../../node_modules/core-js/modules/es6.string.sub.js","core-js/modules/es6.string.sup":"../../node_modules/core-js/modules/es6.string.sup.js","core-js/modules/es6.typed.array-buffer":"../../node_modules/core-js/modules/es6.typed.array-buffer.js","core-js/modules/es6.typed.int8-array":"../../node_modules/core-js/modules/es6.typed.int8-array.js","core-js/modules/es6.typed.uint8-array":"../../node_modules/core-js/modules/es6.typed.uint8-array.js","core-js/modules/es6.typed.uint8-clamped-array":"../../node_modules/core-js/modules/es6.typed.uint8-clamped-array.js","core-js/modules/es6.typed.int16-array":"../../node_modules/core-js/modules/es6.typed.int16-array.js","core-js/modules/es6.typed.uint16-array":"../../node_modules/core-js/modules/es6.typed.uint16-array.js","core-js/modules/es6.typed.int32-array":"../../node_modules/core-js/modules/es6.typed.int32-array.js","core-js/modules/es6.typed.uint32-array":"../../node_modules/core-js/modules/es6.typed.uint32-array.js","core-js/modules/es6.typed.float32-array":"../../node_modules/core-js/modules/es6.typed.float32-array.js","core-js/modules/es6.typed.float64-array":"../../node_modules/core-js/modules/es6.typed.float64-array.js","core-js/modules/es6.weak-map":"../../node_modules/core-js/modules/es6.weak-map.js","core-js/modules/es6.weak-set":"../../node_modules/core-js/modules/es6.weak-set.js","core-js/modules/es7.array.flat-map":"../../node_modules/core-js/modules/es7.array.flat-map.js","core-js/modules/web.timers":"../../node_modules/core-js/modules/web.timers.js","core-js/modules/web.immediate":"../../node_modules/core-js/modules/web.immediate.js","core-js/modules/web.dom.iterable":"../../node_modules/core-js/modules/web.dom.iterable.js","regenerator-runtime/runtime":"../../node_modules/regenerator-runtime/runtime.js","axios":"../../node_modules/axios/index.js"}]},{},["index.js"], null)
+},{"core-js/modules/es6.array.copy-within":"../../node_modules/core-js/modules/es6.array.copy-within.js","core-js/modules/es6.array.fill":"../../node_modules/core-js/modules/es6.array.fill.js","core-js/modules/es6.array.find":"../../node_modules/core-js/modules/es6.array.find.js","core-js/modules/es6.array.find-index":"../../node_modules/core-js/modules/es6.array.find-index.js","core-js/modules/es6.array.from":"../../node_modules/core-js/modules/es6.array.from.js","core-js/modules/es7.array.includes":"../../node_modules/core-js/modules/es7.array.includes.js","core-js/modules/es6.array.iterator":"../../node_modules/core-js/modules/es6.array.iterator.js","core-js/modules/es6.array.of":"../../node_modules/core-js/modules/es6.array.of.js","core-js/modules/es6.array.sort":"../../node_modules/core-js/modules/es6.array.sort.js","core-js/modules/es6.array.species":"../../node_modules/core-js/modules/es6.array.species.js","core-js/modules/es6.date.to-primitive":"../../node_modules/core-js/modules/es6.date.to-primitive.js","core-js/modules/es6.function.has-instance":"../../node_modules/core-js/modules/es6.function.has-instance.js","core-js/modules/es6.function.name":"../../node_modules/core-js/modules/es6.function.name.js","core-js/modules/es6.map":"../../node_modules/core-js/modules/es6.map.js","core-js/modules/es6.math.acosh":"../../node_modules/core-js/modules/es6.math.acosh.js","core-js/modules/es6.math.asinh":"../../node_modules/core-js/modules/es6.math.asinh.js","core-js/modules/es6.math.atanh":"../../node_modules/core-js/modules/es6.math.atanh.js","core-js/modules/es6.math.cbrt":"../../node_modules/core-js/modules/es6.math.cbrt.js","core-js/modules/es6.math.clz32":"../../node_modules/core-js/modules/es6.math.clz32.js","core-js/modules/es6.math.cosh":"../../node_modules/core-js/modules/es6.math.cosh.js","core-js/modules/es6.math.expm1":"../../node_modules/core-js/modules/es6.math.expm1.js","core-js/modules/es6.math.fround":"../../node_modules/core-js/modules/es6.math.fround.js","core-js/modules/es6.math.hypot":"../../node_modules/core-js/modules/es6.math.hypot.js","core-js/modules/es6.math.imul":"../../node_modules/core-js/modules/es6.math.imul.js","core-js/modules/es6.math.log1p":"../../node_modules/core-js/modules/es6.math.log1p.js","core-js/modules/es6.math.log10":"../../node_modules/core-js/modules/es6.math.log10.js","core-js/modules/es6.math.log2":"../../node_modules/core-js/modules/es6.math.log2.js","core-js/modules/es6.math.sign":"../../node_modules/core-js/modules/es6.math.sign.js","core-js/modules/es6.math.sinh":"../../node_modules/core-js/modules/es6.math.sinh.js","core-js/modules/es6.math.tanh":"../../node_modules/core-js/modules/es6.math.tanh.js","core-js/modules/es6.math.trunc":"../../node_modules/core-js/modules/es6.math.trunc.js","core-js/modules/es6.number.constructor":"../../node_modules/core-js/modules/es6.number.constructor.js","core-js/modules/es6.number.epsilon":"../../node_modules/core-js/modules/es6.number.epsilon.js","core-js/modules/es6.number.is-finite":"../../node_modules/core-js/modules/es6.number.is-finite.js","core-js/modules/es6.number.is-integer":"../../node_modules/core-js/modules/es6.number.is-integer.js","core-js/modules/es6.number.is-nan":"../../node_modules/core-js/modules/es6.number.is-nan.js","core-js/modules/es6.number.is-safe-integer":"../../node_modules/core-js/modules/es6.number.is-safe-integer.js","core-js/modules/es6.number.max-safe-integer":"../../node_modules/core-js/modules/es6.number.max-safe-integer.js","core-js/modules/es6.number.min-safe-integer":"../../node_modules/core-js/modules/es6.number.min-safe-integer.js","core-js/modules/es6.number.parse-float":"../../node_modules/core-js/modules/es6.number.parse-float.js","core-js/modules/es6.number.parse-int":"../../node_modules/core-js/modules/es6.number.parse-int.js","core-js/modules/es6.object.assign":"../../node_modules/core-js/modules/es6.object.assign.js","core-js/modules/es7.object.define-getter":"../../node_modules/core-js/modules/es7.object.define-getter.js","core-js/modules/es7.object.define-setter":"../../node_modules/core-js/modules/es7.object.define-setter.js","core-js/modules/es7.object.entries":"../../node_modules/core-js/modules/es7.object.entries.js","core-js/modules/es6.object.freeze":"../../node_modules/core-js/modules/es6.object.freeze.js","core-js/modules/es6.object.get-own-property-descriptor":"../../node_modules/core-js/modules/es6.object.get-own-property-descriptor.js","core-js/modules/es7.object.get-own-property-descriptors":"../../node_modules/core-js/modules/es7.object.get-own-property-descriptors.js","core-js/modules/es6.object.get-own-property-names":"../../node_modules/core-js/modules/es6.object.get-own-property-names.js","core-js/modules/es6.object.get-prototype-of":"../../node_modules/core-js/modules/es6.object.get-prototype-of.js","core-js/modules/es7.object.lookup-getter":"../../node_modules/core-js/modules/es7.object.lookup-getter.js","core-js/modules/es7.object.lookup-setter":"../../node_modules/core-js/modules/es7.object.lookup-setter.js","core-js/modules/es6.object.prevent-extensions":"../../node_modules/core-js/modules/es6.object.prevent-extensions.js","core-js/modules/es6.object.is":"../../node_modules/core-js/modules/es6.object.is.js","core-js/modules/es6.object.is-frozen":"../../node_modules/core-js/modules/es6.object.is-frozen.js","core-js/modules/es6.object.is-sealed":"../../node_modules/core-js/modules/es6.object.is-sealed.js","core-js/modules/es6.object.is-extensible":"../../node_modules/core-js/modules/es6.object.is-extensible.js","core-js/modules/es6.object.keys":"../../node_modules/core-js/modules/es6.object.keys.js","core-js/modules/es6.object.seal":"../../node_modules/core-js/modules/es6.object.seal.js","core-js/modules/es7.object.values":"../../node_modules/core-js/modules/es7.object.values.js","core-js/modules/es6.promise":"../../node_modules/core-js/modules/es6.promise.js","core-js/modules/es7.promise.finally":"../../node_modules/core-js/modules/es7.promise.finally.js","core-js/modules/es6.reflect.apply":"../../node_modules/core-js/modules/es6.reflect.apply.js","core-js/modules/es6.reflect.construct":"../../node_modules/core-js/modules/es6.reflect.construct.js","core-js/modules/es6.reflect.define-property":"../../node_modules/core-js/modules/es6.reflect.define-property.js","core-js/modules/es6.reflect.delete-property":"../../node_modules/core-js/modules/es6.reflect.delete-property.js","core-js/modules/es6.reflect.get":"../../node_modules/core-js/modules/es6.reflect.get.js","core-js/modules/es6.reflect.get-own-property-descriptor":"../../node_modules/core-js/modules/es6.reflect.get-own-property-descriptor.js","core-js/modules/es6.reflect.get-prototype-of":"../../node_modules/core-js/modules/es6.reflect.get-prototype-of.js","core-js/modules/es6.reflect.has":"../../node_modules/core-js/modules/es6.reflect.has.js","core-js/modules/es6.reflect.is-extensible":"../../node_modules/core-js/modules/es6.reflect.is-extensible.js","core-js/modules/es6.reflect.own-keys":"../../node_modules/core-js/modules/es6.reflect.own-keys.js","core-js/modules/es6.reflect.prevent-extensions":"../../node_modules/core-js/modules/es6.reflect.prevent-extensions.js","core-js/modules/es6.reflect.set":"../../node_modules/core-js/modules/es6.reflect.set.js","core-js/modules/es6.reflect.set-prototype-of":"../../node_modules/core-js/modules/es6.reflect.set-prototype-of.js","core-js/modules/es6.regexp.constructor":"../../node_modules/core-js/modules/es6.regexp.constructor.js","core-js/modules/es6.regexp.flags":"../../node_modules/core-js/modules/es6.regexp.flags.js","core-js/modules/es6.regexp.match":"../../node_modules/core-js/modules/es6.regexp.match.js","core-js/modules/es6.regexp.replace":"../../node_modules/core-js/modules/es6.regexp.replace.js","core-js/modules/es6.regexp.split":"../../node_modules/core-js/modules/es6.regexp.split.js","core-js/modules/es6.regexp.search":"../../node_modules/core-js/modules/es6.regexp.search.js","core-js/modules/es6.regexp.to-string":"../../node_modules/core-js/modules/es6.regexp.to-string.js","core-js/modules/es6.set":"../../node_modules/core-js/modules/es6.set.js","core-js/modules/es6.symbol":"../../node_modules/core-js/modules/es6.symbol.js","core-js/modules/es7.symbol.async-iterator":"../../node_modules/core-js/modules/es7.symbol.async-iterator.js","core-js/modules/es6.string.anchor":"../../node_modules/core-js/modules/es6.string.anchor.js","core-js/modules/es6.string.big":"../../node_modules/core-js/modules/es6.string.big.js","core-js/modules/es6.string.blink":"../../node_modules/core-js/modules/es6.string.blink.js","core-js/modules/es6.string.bold":"../../node_modules/core-js/modules/es6.string.bold.js","core-js/modules/es6.string.code-point-at":"../../node_modules/core-js/modules/es6.string.code-point-at.js","core-js/modules/es6.string.ends-with":"../../node_modules/core-js/modules/es6.string.ends-with.js","core-js/modules/es6.string.fixed":"../../node_modules/core-js/modules/es6.string.fixed.js","core-js/modules/es6.string.fontcolor":"../../node_modules/core-js/modules/es6.string.fontcolor.js","core-js/modules/es6.string.fontsize":"../../node_modules/core-js/modules/es6.string.fontsize.js","core-js/modules/es6.string.from-code-point":"../../node_modules/core-js/modules/es6.string.from-code-point.js","core-js/modules/es6.string.includes":"../../node_modules/core-js/modules/es6.string.includes.js","core-js/modules/es6.string.italics":"../../node_modules/core-js/modules/es6.string.italics.js","core-js/modules/es6.string.iterator":"../../node_modules/core-js/modules/es6.string.iterator.js","core-js/modules/es6.string.link":"../../node_modules/core-js/modules/es6.string.link.js","core-js/modules/es7.string.pad-start":"../../node_modules/core-js/modules/es7.string.pad-start.js","core-js/modules/es7.string.pad-end":"../../node_modules/core-js/modules/es7.string.pad-end.js","core-js/modules/es6.string.raw":"../../node_modules/core-js/modules/es6.string.raw.js","core-js/modules/es6.string.repeat":"../../node_modules/core-js/modules/es6.string.repeat.js","core-js/modules/es6.string.small":"../../node_modules/core-js/modules/es6.string.small.js","core-js/modules/es6.string.starts-with":"../../node_modules/core-js/modules/es6.string.starts-with.js","core-js/modules/es6.string.strike":"../../node_modules/core-js/modules/es6.string.strike.js","core-js/modules/es6.string.sub":"../../node_modules/core-js/modules/es6.string.sub.js","core-js/modules/es6.string.sup":"../../node_modules/core-js/modules/es6.string.sup.js","core-js/modules/es6.typed.array-buffer":"../../node_modules/core-js/modules/es6.typed.array-buffer.js","core-js/modules/es6.typed.int8-array":"../../node_modules/core-js/modules/es6.typed.int8-array.js","core-js/modules/es6.typed.uint8-array":"../../node_modules/core-js/modules/es6.typed.uint8-array.js","core-js/modules/es6.typed.uint8-clamped-array":"../../node_modules/core-js/modules/es6.typed.uint8-clamped-array.js","core-js/modules/es6.typed.int16-array":"../../node_modules/core-js/modules/es6.typed.int16-array.js","core-js/modules/es6.typed.uint16-array":"../../node_modules/core-js/modules/es6.typed.uint16-array.js","core-js/modules/es6.typed.int32-array":"../../node_modules/core-js/modules/es6.typed.int32-array.js","core-js/modules/es6.typed.uint32-array":"../../node_modules/core-js/modules/es6.typed.uint32-array.js","core-js/modules/es6.typed.float32-array":"../../node_modules/core-js/modules/es6.typed.float32-array.js","core-js/modules/es6.typed.float64-array":"../../node_modules/core-js/modules/es6.typed.float64-array.js","core-js/modules/es6.weak-map":"../../node_modules/core-js/modules/es6.weak-map.js","core-js/modules/es6.weak-set":"../../node_modules/core-js/modules/es6.weak-set.js","core-js/modules/es7.array.flat-map":"../../node_modules/core-js/modules/es7.array.flat-map.js","core-js/modules/web.timers":"../../node_modules/core-js/modules/web.timers.js","core-js/modules/web.immediate":"../../node_modules/core-js/modules/web.immediate.js","core-js/modules/web.dom.iterable":"../../node_modules/core-js/modules/web.dom.iterable.js","regenerator-runtime/runtime":"../../node_modules/regenerator-runtime/runtime.js","axios":"../../node_modules/axios/index.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+var global = arguments[3];
+var OVERLAY_ID = '__parcel__error__overlay__';
+var OldModule = module.bundle.Module;
+
+function Module(moduleName) {
+  OldModule.call(this, moduleName);
+  this.hot = {
+    data: module.bundle.hotData,
+    _acceptCallbacks: [],
+    _disposeCallbacks: [],
+    accept: function (fn) {
+      this._acceptCallbacks.push(fn || function () {});
+    },
+    dispose: function (fn) {
+      this._disposeCallbacks.push(fn);
+    }
+  };
+  module.bundle.hotData = null;
+}
+
+module.bundle.Module = Module;
+var checkedAssets, assetsToAccept;
+var parent = module.bundle.parent;
+
+if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
+  var hostname = "" || location.hostname;
+  var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52433" + '/');
+
+  ws.onmessage = function (event) {
+    checkedAssets = {};
+    assetsToAccept = [];
+    var data = JSON.parse(event.data);
+
+    if (data.type === 'update') {
+      var handled = false;
+      data.assets.forEach(function (asset) {
+        if (!asset.isNew) {
+          var didAccept = hmrAcceptCheck(global.parcelRequire, asset.id);
+
+          if (didAccept) {
+            handled = true;
+          }
+        }
+      }); // Enable HMR for CSS by default.
+
+      handled = handled || data.assets.every(function (asset) {
+        return asset.type === 'css' && asset.generated.js;
+      });
+
+      if (handled) {
+        console.clear();
+        data.assets.forEach(function (asset) {
+          hmrApply(global.parcelRequire, asset);
+        });
+        assetsToAccept.forEach(function (v) {
+          hmrAcceptRun(v[0], v[1]);
+        });
+      } else {
+        window.location.reload();
+      }
+    }
+
+    if (data.type === 'reload') {
+      ws.close();
+
+      ws.onclose = function () {
+        location.reload();
+      };
+    }
+
+    if (data.type === 'error-resolved') {
+      console.log('[parcel] ✨ Error resolved');
+      removeErrorOverlay();
+    }
+
+    if (data.type === 'error') {
+      console.error('[parcel] 🚨  ' + data.error.message + '\n' + data.error.stack);
+      removeErrorOverlay();
+      var overlay = createErrorOverlay(data);
+      document.body.appendChild(overlay);
+    }
+  };
+}
+
+function removeErrorOverlay() {
+  var overlay = document.getElementById(OVERLAY_ID);
+
+  if (overlay) {
+    overlay.remove();
+  }
+}
+
+function createErrorOverlay(data) {
+  var overlay = document.createElement('div');
+  overlay.id = OVERLAY_ID; // html encode message and stack trace
+
+  var message = document.createElement('div');
+  var stackTrace = document.createElement('pre');
+  message.innerText = data.error.message;
+  stackTrace.innerText = data.error.stack;
+  overlay.innerHTML = '<div style="background: black; font-size: 16px; color: white; position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; padding: 30px; opacity: 0.85; font-family: Menlo, Consolas, monospace; z-index: 9999;">' + '<span style="background: red; padding: 2px 4px; border-radius: 2px;">ERROR</span>' + '<span style="top: 2px; margin-left: 5px; position: relative;">🚨</span>' + '<div style="font-size: 18px; font-weight: bold; margin-top: 20px;">' + message.innerHTML + '</div>' + '<pre>' + stackTrace.innerHTML + '</pre>' + '</div>';
+  return overlay;
+}
+
+function getParents(bundle, id) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return [];
+  }
+
+  var parents = [];
+  var k, d, dep;
+
+  for (k in modules) {
+    for (d in modules[k][1]) {
+      dep = modules[k][1][d];
+
+      if (dep === id || Array.isArray(dep) && dep[dep.length - 1] === id) {
+        parents.push(k);
+      }
+    }
+  }
+
+  if (bundle.parent) {
+    parents = parents.concat(getParents(bundle.parent, id));
+  }
+
+  return parents;
+}
+
+function hmrApply(bundle, asset) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return;
+  }
+
+  if (modules[asset.id] || !bundle.parent) {
+    var fn = new Function('require', 'module', 'exports', asset.generated.js);
+    asset.isNew = !modules[asset.id];
+    modules[asset.id] = [fn, asset.deps];
+  } else if (bundle.parent) {
+    hmrApply(bundle.parent, asset);
+  }
+}
+
+function hmrAcceptCheck(bundle, id) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return;
+  }
+
+  if (!modules[id] && bundle.parent) {
+    return hmrAcceptCheck(bundle.parent, id);
+  }
+
+  if (checkedAssets[id]) {
+    return;
+  }
+
+  checkedAssets[id] = true;
+  var cached = bundle.cache[id];
+  assetsToAccept.push([bundle, id]);
+
+  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
+    return true;
+  }
+
+  return getParents(global.parcelRequire, id).some(function (id) {
+    return hmrAcceptCheck(global.parcelRequire, id);
+  });
+}
+
+function hmrAcceptRun(bundle, id) {
+  var cached = bundle.cache[id];
+  bundle.hotData = {};
+
+  if (cached) {
+    cached.hot.data = bundle.hotData;
+  }
+
+  if (cached && cached.hot && cached.hot._disposeCallbacks.length) {
+    cached.hot._disposeCallbacks.forEach(function (cb) {
+      cb(bundle.hotData);
+    });
+  }
+
+  delete bundle.cache[id];
+  bundle(id);
+  cached = bundle.cache[id];
+
+  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
+    cached.hot._acceptCallbacks.forEach(function (cb) {
+      cb();
+    });
+
+    return true;
+  }
+}
+},{}]},{},["../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.js"], null)
 //# sourceMappingURL=/bundle.js.map
