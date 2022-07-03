@@ -12,6 +12,8 @@ block content
           a(href="/book").form__input.btn--green Book
       form(id="search-bookings-form")
         input#search-bookings.form__input(type='text' name='search-input' placeholder='Search by hallname....')
+      form(id="search-bookings-form-two")
+        input#search-bookings.form__input(type='text' name='search-input-two' placeholder='Search by client name....')
       .card-container
         each booking in bookings
           .card

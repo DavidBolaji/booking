@@ -149,7 +149,6 @@ exports.createBooking = async (req, res, next) => {
 };
 
 exports.multipleBooking = async (req, res, next) => {
-  console.log(req.body);
   const hol = req.body.map((e) => {
     return {
       ...e,
@@ -463,6 +462,39 @@ exports.getUnfilteredBookings = async (req, res, next) => {
     } else if (search === "bookedFrom") {
       booking = await Booking.find({ bookedFrom: { $gte: new Date(value) } });
     }
+
+    responseHandler(res, 200, {
+      count: JSON.stringify(count),
+      booking,
+    });
+  } catch (error) {
+    return next(
+      new CustomError(
+        500,
+        "Seems like an error processing your request...",
+        error
+      )
+    );
+  }
+
+  // responseHandler(res, 200, hall);
+};
+
+exports.getUnfilteredBookings2 = async (req, res, next) => {
+  const { valueF, valueT } = req.params;
+  try {
+    const count = await Booking.estimatedDocumentCount(req.query, function (
+      err,
+      count
+    ) {
+      return count;
+    });
+    let booking;
+
+    booking = await Booking.find({
+      bookedFrom: { $gte: new Date(valueF) },
+      bookedTo: { $lte: new Date(valueT) },
+    });
 
     responseHandler(res, 200, {
       count: JSON.stringify(count),

@@ -1618,22 +1618,19 @@ if (calenderCont) {
 
       submitData: async function (options) {
         console.log(options);
-        try {
-          const res = await axios(
-            {
-              method: "POST",
-              url: `${location.protocol}//${location.host}/api/v1/bookings/many`,
-              data: [...options],
-            },
-            {
-              withCredentials: true,
-            }
-          );
-          console.log(res);
-          //   return res;
-        } catch (error) {
-          return "error";
-        }
+
+        const res = await axios(
+          {
+            method: "POST",
+            url: `${location.protocol}//${location.host}/api/v1/bookings/many`,
+            data: [...options],
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        console.log(res);
+        return res;
       },
 
       returnFilterAndStartDate: function () {
@@ -2081,6 +2078,12 @@ if (calenderCont) {
           paid,
           user,
         };
+      },
+
+      disableBtn: function () {
+        document
+          .querySelector(".form__input.bg-green")
+          .classList.add("disabled");
       },
 
       showModal: function (data) {
@@ -2584,6 +2587,31 @@ if (calenderCont) {
         // get input values
         let bookedData = UIctrl.getBookedValue();
 
+        for (const val in bookedData) {
+          console.log(val);
+          if (val === "clientName" && bookedData[val] === "") {
+            console.log("entered");
+            return UIctrl.showAlert("error", "Client Name cannot be empty");
+          } else if (val === "clientTel" && bookedData[val] === "") {
+            return UIctrl.showAlert("error", "Client Number cannot be empty");
+          } else if (val === "event" && bookedData[val] === "") {
+            return UIctrl.showAlert(
+              "error",
+              "Event description cannot be empty"
+            );
+          } else if (val === "clientEmail") {
+            let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
+
+            if (bookedData[val] === "") {
+              return UIctrl.showAlert("error", "Email cannot be empty");
+            } else if (!regex.test(bookedData[val])) {
+              return UIctrl.showAlert("error", "Please Enter a valid Email");
+            }
+          } else if (val === "attendance" && bookedData[val] === "") {
+            return UIctrl.showAlert("error", "Attendance cannot be empty");
+          }
+        }
+
         console.log(bookedData);
         calCtrl.setHall(bookedData.hallname);
 
@@ -2597,14 +2625,19 @@ if (calenderCont) {
           .submitData(multipleData)
           .then((res) => {
             console.log(res);
-            // if (res.status === 201) {
-            //   UIctrl.showAlert("success", "Booking successful");
-            //   window.setTimeout(() => {
-            //     location.assign("/bookings");
-            //   }, 1500);
-            // }
+            UIctrl.disableBtn();
+            if (res.status === 201) {
+              UIctrl.showAlert("success", "Reservation successful");
+              window.setTimeout(() => {
+                location.assign("/bookings");
+              }, 3000);
+            } else {
+              console.log(res);
+              showAlert("error", e);
+            }
           })
           .catch((e) => {
+            console.log(e);
             showAlert("error", e.response.data.error);
           });
 
@@ -3172,6 +3205,9 @@ if (document.querySelector(".tab")) {
     inputFilter ? (inputFilter.value = "") : null;
     const selectFilter = document.querySelector(".select-book");
     const btnSub = document.querySelector(".btn-submit");
+    const rangeFrom = document.querySelector(".range_from");
+    const rangeTo = document.querySelector(".range_to");
+    const rangeSubmit = document.querySelector("#rangeB");
     let start = true;
 
     // get the quotes from API
@@ -3225,6 +3261,27 @@ if (document.querySelector(".tab")) {
       }
     };
 
+    const getUnfiltered2 = async (valueF, valueT) => {
+      try {
+        // const res = await axios({
+        //   method: "GET",
+        //   url: `${window.location.protocol}//${window.location.host}/api/v1/no-filter/bookings/search/bookedFrom/${valueF}/bookedTo/${valueT}`,
+        // });
+        const response = await fetch(
+          `${window.location.protocol}//${window.location.host}/api/v1/no-filter/bookings/search/bookedFrom/${valueF}/bookedTo/${valueT}`,
+          {
+            method: "GET",
+          }
+        );
+
+        const res = response.json();
+
+        return res;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     count = 0;
 
     const setFilter = (val) => {
@@ -3261,11 +3318,13 @@ if (document.querySelector(".tab")) {
           !value.paid ? "unpaid" : "paid"
         }</td><td style="white-space: nowrap">&#8358 ${new Intl.NumberFormat().format(
           value.total
-        )}</td><td>${value.discount}%</td><td><i onClick="runDelete(this)" id=${
+        )}</td><td>${value.discount}%</td><td><i onClick="runDelete(this,'${
+          value.clientName
+        }')" id=${
           value._id
-        }  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><a onClick="return confirm('are you sure you want to update')" href="/bookings/${
-          value._id
-        }"><i id=${
+        }  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><a onClick="return confirm('are you sure you want to update ${
+          value.clientName
+        }')" href="/bookings/${value._id}"><i id=${
           value._id
         }  class="fa fa-edit" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></a></td></tr>`;
       });
@@ -3290,9 +3349,13 @@ if (document.querySelector(".tab")) {
           !value.paid ? "unpaid" : "paid"
         }</td><td style="white-space: nowrap">&#8358 ${new Intl.NumberFormat().format(
           value.total
-        )}</td><td>${value.discount}%</td><td><i onClick="runDelete(this)" id=${
+        )}</td><td>${value.discount}%</td><td><i onClick="runDelete(this,'${
+          value.clientName
+        }')" id=${
           value._id
-        }  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><a onClick="return confirm('are you sure you want to update')" href="/bookings/${
+        }  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><a onClick="return confirm('are you sure you want to update ${
+          value.clientName
+        }')" href="/bookings/${
           value._id
         }"><i class="fa fa-edit" style="color:#20bf6b;display: flex;justify-content: center;cursor: pointer"></i></a></td></tr>`;
       });
@@ -3348,11 +3411,22 @@ if (document.querySelector(".tab")) {
       });
     };
 
+    const filterScript2 = (e) => {
+      showLoader();
+      // console.log(queryVal,inputFilter.value);
+
+      getUnfiltered2(rangeFrom.value, rangeTo.value).then((data) => {
+        console.log(data.data.booking);
+        showQuotesF(data.data.booking);
+      });
+    };
+
     const changeScript = () => {
       queryVal = selectFilter.value;
     };
 
     btnSub ? btnSub.addEventListener("click", filterScript) : null;
+    rangeSubmit ? rangeSubmit.addEventListener("click", filterScript2) : null;
     selectFilter ? selectFilter.addEventListener("change", changeScript) : null;
 
     // control variables
@@ -3475,9 +3549,9 @@ if (document.querySelector(".bin")) {
           !value.paid ? "unpaid" : "paid"
         }</td><td style="white-space: nowrap">&#8358 ${new Intl.NumberFormat().format(
           value.total
-        )}</td><td>${
-          value.discount
-        }%</td><td><i onClick="runDeleteP(this)" id=${
+        )}</td><td>${value.discount}%</td><td><i onClick="runDeleteP(this,'${
+          value.clientName
+        }')" id=${
           value._id
         }  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><i id=${
           value._id
@@ -3516,9 +3590,9 @@ if (document.querySelector(".bin")) {
           !value.paid ? "unpaid" : "paid"
         }</td><td style="white-space: nowrap">&#8358 ${new Intl.NumberFormat().format(
           value.total
-        )}</td><td>${
-          value.discount
-        }%</td><td><i onClick="runDeleteP(this)" id=${
+        )}</td><td>${value.discount}%</td><td><i onClick="runDeleteP(this,'${
+          value.clientName
+        }')" id=${
           value._id
         }  class="fa fa-trash" style="color:#eb4d4b;display: flex;justify-content: center;cursor: pointer"></i><td><i id=${
           value._id
@@ -3579,11 +3653,22 @@ if (document.querySelector(".bin")) {
       });
     };
 
+    const filterScript2 = (e) => {
+      showLoader();
+      // console.log(queryVal,inputFilter.value);
+
+      getUnfiltered2(rangeFrom.value, rangeTo.value).then((data) => {
+        // console.log(data.data.data.bin);
+        showQuotesF(data.data.data.bin);
+      });
+    };
+
     const changeScript = () => {
       queryVal = selectFilter.value;
     };
 
     btnSubB ? btnSubB.addEventListener("click", filterScript) : null;
+    rangeSubmit ? rangeSubmit.addEventListener("click", filterScript2) : null;
     selectFilterB
       ? selectFilterB.addEventListener("change", changeScript)
       : null;
@@ -3621,8 +3706,8 @@ if (document.querySelector(".bin")) {
 }
 
 // Delete from table
-const runDelete = (e) => {
-  if (confirm("Are you sure you want to delete")) {
+const runDelete = (e, name) => {
+  if (confirm(`Are you sure you want to delete ${name}`)) {
     deleteOneBook(e.id, localStorage.getItem("user_delete_id"));
   } else {
     console.log("no");
@@ -3630,8 +3715,8 @@ const runDelete = (e) => {
 };
 
 // Delete from Bin
-const runDeleteP = (e) => {
-  if (confirm("Are you sure you want to delete permanently")) {
+const runDeleteP = (e, name) => {
+  if (confirm(`Are you sure you want to delete ${name} permanently `)) {
     deletePermanently(e.id);
   } else {
     console.log("no");

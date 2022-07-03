@@ -61,6 +61,10 @@ router
   .route("/no-filter/bookings/search/:search/value/:value")
   .get(protect, bookingsController.getUnfilteredBookings);
 
+router
+  .route("/no-filter/bookings/search/bookedFrom/:valueF/bookedTo/:valueT")
+  .get(protect, bookingsController.getUnfilteredBookings2);
+
 router.get(
   "/bookings/getavailability/halls/:hallname/from/:from/to/:to",
   protect,

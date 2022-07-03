@@ -6,14 +6,14 @@ block content
     form.booking-form#reservation-form
       .input-group
         label.form__label(for='clientName')
-          input#clientName.form__input(type='text' name='clientName' autocomplete='given-name' placeholder="Enter the Client's name")
+          input#clientName.form__input(type='text' name='clientName' autocomplete='given-name' placeholder="Enter the Client's name" required=true)
         label.form__label(for='clientTel')
-          input#clientTel.form__input(type='tel' name='clientTel' autocomplete='tel' placeholder="Enter the Client's Phone Number")
+          input#clientTel.form__input(type='tel' name='clientTel' autocomplete='tel' placeholder="Enter the Client's Phone Number" required)
       label.form__label(for='clientEmail')
-        input#email.form__input(type='email' name='clientEmail' autocomplete='email' placeholder="Enter the Client's email")
+        input#email.form__input(type='email' name='clientEmail' autocomplete='email' placeholder="Enter the Client's email" required)
       .input-group
         label(for='hallname')
-          select#hallname.form__input(name='hallname')
+          select#hallname.form__input(name='hallname' required)
             option(value='' disabled='' selected='') Choose a Hall
             option(value="Africa Hall Conference") Africa Hall Conference
             option(value="Africa Hall Wedding") Africa Hall Wedding
@@ -30,10 +30,10 @@ block content
             option(value="Suleja Garden") Suleja Garden
             option(value="Taraba Hall") Taraba Hall
         label(for='attendance')
-          input#attendance.form__input(type='number' name='attendance' placeholder='Enter the event Attendance' min='5' max='3000')
+          input#attendance.form__input(type='number' name='attendance' placeholder='Enter the event Attendance' min='5' max='3000' required)
       .input-group_money 
         label(for='paid')
-          select#paidB(name="paid")
+          select#paidB(name="paid" required)
             option(value="unpaid") Unpaid 
             option(value="deposit") Deposit 
             option(value="paid") Fully Paid 
@@ -45,7 +45,7 @@ block content
         .payment__total Total: $5875
 
       label.form__label(for='event')
-        textarea#event.form__textarea(name='event' placeholder='Event Description' maxlength='500' minlength='5')
+        textarea#event.form__textarea(name='event' placeholder='Event Description' maxlength='500' minlength='5' required)
       div.calender__container
         div.calender__calender
           div.calender__month

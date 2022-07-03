@@ -18,6 +18,16 @@ block content
       button(onclick="document.location.href='/csv' ") Download csv 
       button(onclick="document.location.href='/bin' ") bin 
       button(onclick="document.location.href='/calender' ") calender
+      button.rangeBtn search range
+
+    .range
+      .range-one 
+        label(for="from") From 
+        input(type="date" name="from" class="range_from")
+      .range-two 
+        label(for="to") To
+        input(type="date" name="to" class="range_to")
+      button(id="rangeB") Search
       
     .table-form
       table.tab

@@ -19,8 +19,12 @@ const loginForm = document.querySelector("#login-form");
 const registerForm = document.querySelector("#register-form");
 const logout = document.querySelector("#logout");
 const paginationList = document.querySelector(".pagination__list");
+const rangeBtn = document.querySelector(".rangeBtn");
+const rangeGrp = document.querySelector(".range");
+
 // const bookingForm = document.querySelector('#reservation-form');
 const searchBar = document.querySelector("#search-bookings-form");
+const searchBarTwo = document.querySelector("#search-bookings-form-two");
 const getAvlbBtn = document.querySelector("#av-btn");
 const availabilityForm = document.querySelector("#availability-form");
 const downloadBtn = document.querySelector("#export");
@@ -89,6 +93,12 @@ if (logout) {
   });
 }
 
+if (rangeBtn) {
+  rangeBtn.addEventListener("click", () => {
+    showRange();
+  });
+}
+
 if (searchBar) {
   searchBar.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -99,6 +109,18 @@ if (searchBar) {
     searchByHallname(input);
   });
 }
+
+if (searchBarTwo) {
+  searchBarTwo.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const searchParam = document.querySelector('input[name="search-input-two"]')
+      .value;
+    const input = searchParam;
+    // return;
+    searchByClientname(input);
+  });
+}
+
 if (availabilityForm) {
   availabilityForm.addEventListener("submit", (e) => {
     const from = document.querySelector('input[name="from"]').value;
@@ -232,6 +254,10 @@ const logoutFunction = async () => {
   }
 };
 
+function showRange() {
+  rangeGrp.classList.toggle("active");
+}
+
 function range(start, end) {
   let arr = [];
   for (let i = start; i <= end; i++) {
@@ -277,6 +303,16 @@ const searchByHallname = (input) => {
     showAlert("error", "Invalid input!");
   }
 };
+
+const searchByClientname = (input) => {
+  try {
+    showAlert("success", "Redirecting...");
+    location.assign(`/bookings?clientName=${input}`);
+  } catch (error) {
+    showAlert("error", "Invalid input!");
+  }
+};
+
 const getAvailableDates = async (from, to, hallname) => {
   try {
     const res = await axios(
